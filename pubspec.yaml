@@ -45,10 +45,11 @@ dependencies:
   bloc: ^9.0.0
   flutter_bloc: ^9.1.0
   equatable: ^2.0.7
-  flashy_tab_bar2: ^0.0.10
   google_nav_bar: ^5.0.7
   cloud_firestore: ^5.6.6
   firebase_auth: ^5.5.2
+  flashy_tab_bar2: ^0.0.10
+  
 
 dev_dependencies:
   flutter_test:

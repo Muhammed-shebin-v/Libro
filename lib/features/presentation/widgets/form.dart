@@ -6,12 +6,14 @@ class CustomForm extends StatelessWidget {
   final String hint;
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final Widget? suffixIcon;
   const CustomForm({
     super.key,
     required this.title,
     required this.controller,
     required this.validator,
     required this.hint,
+    this.suffixIcon
   });
 
   @override
@@ -24,6 +26,7 @@ class CustomForm extends StatelessWidget {
           validator: validator,
           controller: controller,
           decoration: InputDecoration(
+            suffixIcon: suffixIcon,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey),
               borderRadius: BorderRadius.circular(18.0),

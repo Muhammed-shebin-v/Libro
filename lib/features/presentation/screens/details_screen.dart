@@ -1,23 +1,107 @@
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:libro/features/presentation/screens/subscription.dart';
+import 'package:libro/features/data/models/user_model.dart';
+import 'package:libro/features/presentation/screens/bottom_navigation.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/widgets/form.dart';
 import 'package:libro/features/presentation/widgets/long_button.dart';
 import 'package:lottie/lottie.dart';
 
-class DetailsScreen extends StatelessWidget {
-  DetailsScreen({super.key});
+class DetailsScreen extends StatefulWidget {
+  final String uid;
+  final String email;
+  final String username;
+
+   const DetailsScreen({
+    super.key,
+    required this.uid,
+    required this.email,
+    required this.username,
+  });
+
+  @override
+  State<DetailsScreen> createState() => _DetailsScreenState();
+}
+
+class _DetailsScreenState extends State<DetailsScreen> {
+  final _firestore = FirebaseFirestore.instance;
+
   final _fullNameController = TextEditingController();
+
   final _phoneNumberController = TextEditingController();
+
   final _placeController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _phoneNumberController.dispose();
+    _placeController.dispose();
+    super.dispose();
+  }
+
+  bool _isLoading = false;
+
+  Future<void> _saveUserDetails() async {
+    log('fdf');
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+         log('true');
+      }
+      );
+
+      try {
+        // Create UserModel
+        final userModel = UserModel(
+          uid: widget.uid,
+          username: widget.username,
+          fullName: _fullNameController.text.trim(),
+          email: widget.email,
+          address: _placeController.text.trim(),
+          phoneNumber: _phoneNumberController.text.trim(),
+        );
+        
+        // Save to Firestore
+        await _firestore.collection('users').doc(widget.uid).set(userModel.toMap());
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registration complete!')),
+          );
+          
+          // Navigate to home screen or dashboard
+          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>BottomNavigation()));
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error saving details: ${e.toString()}')),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    log(widget.uid);
     return Scaffold(
       backgroundColor: AppColors.color60,
-      body: SafeArea(
-        child: Padding(
+      body:SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+        : Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
@@ -95,13 +179,10 @@ class DetailsScreen extends StatelessWidget {
                 Gap(50),
                 CustomLongButton(
                   title: 'Next',
-                  ontap: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => Subscription()),
-                      );
-                    }
+                  ontap: (){
+                     _saveUserDetails();
+                    log('fdfdfd');
+                   
                   },
                 ),
               ],

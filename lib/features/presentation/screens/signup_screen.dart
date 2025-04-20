@@ -1,7 +1,9 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:libro/features/data/models/check.dart';
 
 import 'package:libro/features/presentation/screens/details_screen.dart';
 import 'package:libro/features/presentation/screens/login_screen.dart';
@@ -11,23 +13,81 @@ import 'package:libro/features/presentation/bloc/signup/signup_bloc.dart';
 import 'package:libro/features/presentation/bloc/signup/signup_event.dart';
 import 'package:libro/features/presentation/bloc/signup/signup_state.dart';
 
-class SignupScreen extends StatelessWidget {
-  SignupScreen({super.key});
+class SignupScreen extends StatefulWidget {
+
+  const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  bool _isLoading = false;
+
+  bool _obscurePassword = true;
+
+  bool _obscureConfirmPassword = true;
 
   final _emailController = TextEditingController();
 
   final _passwordController = TextEditingController();
 
   final _usernameController = TextEditingController();
+  final _confirmPasswordController =TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  Future<void> _createAuthUser() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        // Only create the Firebase Auth user at this stage
+        final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+        
+        if (userCredential.user != null) {
+          if (mounted) {
+            // Navigate to user details screen, passing the necessary data
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailsScreen(
+                  uid: userCredential.user!.uid,
+                  email: _emailController.text.trim(),
+                  username: _usernameController.text.trim(),
+                ),
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Authentication Error: ${e.toString()}')),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.color60,
       body: SafeArea(
-        child: Padding(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+        : Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           child: Form(
             key: _formKey,
@@ -44,17 +104,21 @@ class SignupScreen extends StatelessWidget {
                   hint: 'enter username',
                   controller: _usernameController,
                   validator: (value) {
-                    if (value == null || value.isEmpty || value.length < 2) {
+                    if (value == null || value.trim().isEmpty || value.length < 2) {
                       return 'Please enter username';
                     }
-                    return null;
+                    if (value.contains(' ')) {
+                            return 'Username cannot contain spaces';
+                          }
+                          return null;
+                   
                   },
                 ),
                 CustomForm(
                   title: 'Email',
                   controller: _emailController,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value.trim().isEmpty) {
                       return 'Please enter email';
                     }
                     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
@@ -69,6 +133,16 @@ class SignupScreen extends StatelessWidget {
                 CustomForm(
                   title: 'Password',
                   controller: _passwordController,
+                 suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter password';
@@ -81,34 +155,63 @@ class SignupScreen extends StatelessWidget {
                   hint: 'enter password',
                 ),
                 SizedBox(height: 25),
-            
+            CustomForm(
+                  title: 'Confirm',
+                  controller: _confirmPasswordController,
+                 suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureConfirmPassword = !_obscureConfirmPassword;
+                              });
+                            },
+                          ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                            return 'Please confirm your password';
+                          }
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                    return null;
+                  },
+                  hint: 'enter password',
+                ),
                 
                  Center(
-                  child: BlocConsumer<SignupBloc, SignupState>(
-                    listener: (context, state) {
-                      if (state is SignupSuccess) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => DetailsScreen()),
-                        );
-                      } else if (state is SignupFailure) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(state.error)),
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      return ElevatedButton(
+                  //BlocConsumer<SignupBloc, SignupState>(
+                  //   listener: (context, state) {
+                  //     if (state is SignupSuccess) {
+                  //       Navigator.pushReplacement(
+                  //         context,
+                  //         MaterialPageRoute(builder: (context) => DetailsScreen(
+                  //            uid: userCredential.user!.uid,
+                  // email: _emailController.text.trim(),
+                  // username: _usernameController.text.trim(),
+                  //         )),
+                  //       );
+                  //     } else if (state is SignupFailure) {
+                  //       ScaffoldMessenger.of(context).showSnackBar(
+                  //         SnackBar(content: Text(state.error)),
+                  //       );
+                  //     }
+                  //   },
+                  //   builder: (context, state) {
+                  //     return 
+                   child: ElevatedButton(
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            context.read<SignupBloc>().add(
-                              SignupUser(
-                                _usernameController.text,
-                                _emailController.text,
-                                _passwordController.text,
-                              ),
-                            );
-                          }
+                          // if (_formKey.currentState!.validate()) {
+                          //   // context.read<SignupBloc>().add(
+                          //   //   SignupUser(
+                          //   //     _usernameController.text,
+                          //   //     _emailController.text,
+                          //   //     _passwordController.text,
+                          //   //    ),
+                          //   // );
+                          // }
+                          _createAuthUser();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber,
@@ -117,15 +220,15 @@ class SignupScreen extends StatelessWidget {
                           ),
                           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 50),
                         ),
-                        child: state is SignupLoading
-                            ? CircularProgressIndicator(color: Colors.white)
-                            : Text('Sign Up', style: TextStyle(fontSize: 16, color: Colors.black)),
-                      );
-                    },
-                  ),
-                ),
-            
-                SizedBox(height: 15),
+                        child:
+                          // is SignupLoading
+                            // ? CircularProgressIndicator(color: Colors.white)
+                            // :
+                             Text('Sign Up', style: TextStyle(fontSize: 16, color: Colors.black)),
+                      
+                   )
+                   ),
+                   SizedBox(height: 15),
                 Center(
                   child: TextButton(
                     onPressed: () {
@@ -150,11 +253,17 @@ class SignupScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+                   ]
+                   )
+                   )
+                   )
+                   )
+                   );
+  
+                
+                
+            
+                
+    
   }
 }
