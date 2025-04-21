@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libro/features/auth/auth_service.dart';
 import 'package:libro/features/data/models/check.dart';
+import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
+import 'package:libro/features/presentation/bloc/book/books_event.dart';
 import 'package:libro/features/presentation/bloc/login/login_bloc.dart';
 import 'package:libro/features/presentation/screens/bottom_navigation.dart';
 import 'package:libro/features/presentation/screens/check.dart';
@@ -31,6 +33,7 @@ class Libro extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => SignupBloc(AuthService())),
         BlocProvider(create: (context) => LoginBloc(AuthService())),
+        BlocProvider(create: (context)=>BookBloc()..add(FetchBooks()),)
       ],
       child: MaterialApp(
         title: 'Libro',

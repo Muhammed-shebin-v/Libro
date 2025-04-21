@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
+import 'package:libro/features/presentation/bloc/book/books_state.dart';
 import 'package:libro/features/presentation/screens/qr_scanner.dart';
 import 'package:libro/features/presentation/screens/score_screen.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
@@ -149,13 +152,18 @@ class HomeScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            BooksList(
-                              title: 'Latest Added',
-                              books: books,
-                              authors: authors,
-                              images: images,
-                              gonores: gonores,
-                              colors: colors,
+                            BlocBuilder<BookBloc, BookState>(
+                              builder: (context, state) {
+                               if(state is BookLoading){
+                                return Center(child: CircularProgressIndicator(),);
+                               }else if(state is BookError){
+                                return Center(child: Text('error'),);
+                               }else if(state is BookLoaded){
+                                return BooksList(title: 'Latest Added', books: state.books.map((book)=>book['bookname'] ?? 'No Title').toList(), images: images, authors: state.books.map((book)=>book['authername'] ?? 'No Title').toList(), gonores: state.books.map((book)=>book['category'] ?? 'No Title').toList(), colors: colors);
+                               }else{
+                                return Center(child: Text('not known'),);
+                               }
+                              },
                             ),
                             BooksList(
                               title: 'Most Read',
@@ -165,7 +173,7 @@ class HomeScreen extends StatelessWidget {
                               gonores: gonores,
                               colors: colors,
                             ),
-                          ],
+                          ]
                         ),
                       ),
                     ),
