@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/data/models/book.dart';
 import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
 import 'package:libro/features/presentation/bloc/book/books_state.dart';
+import 'package:libro/features/presentation/screens/book_info.dart';
 import 'package:libro/features/presentation/screens/qr_scanner.dart';
 import 'package:libro/features/presentation/screens/score_screen.dart';
+import 'package:libro/features/presentation/widgets/book.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/custom_ad.dart';
 import 'package:libro/features/presentation/widgets/search_bar.dart';
 import 'package:lottie/lottie.dart';
-
 
 // pading fo rbooks
 class HomeScreen extends StatelessWidget {
@@ -38,9 +41,15 @@ class HomeScreen extends StatelessWidget {
             },
             icon: Icon(Icons.qr_code),
           ),
-          IconButton(onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>ScoreScreen()));
-          }, icon: Icon(Icons.score)),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ScoreScreen()),
+              );
+            },
+            icon: Icon(Icons.score),
+          ),
           Gap(10),
         ],
       ),
@@ -122,7 +131,9 @@ class HomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(25),
                           ),
-                          boxShadow: [BoxShadow(offset: Offset(4, 4))],
+                          boxShadow: [
+                            BoxShadow(offset: Offset(4, 4), color: Colors.grey),
+                          ],
                         ),
                         child: BooksList(
                           title: 'Books of The Week',
@@ -138,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                       top: 300,
                       right: 0,
                       child: Container(
-                        padding: EdgeInsets.only(top: 30, left: 10),
+                        padding: EdgeInsets.only(top: 30),
                         height: 550,
                         width: MediaQuery.of(context).size.width * 0.95,
                         decoration: BoxDecoration(
@@ -147,22 +158,130 @@ class HomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(25),
                           ),
-                          boxShadow: [BoxShadow(offset: Offset(-4, 4))],
+                          boxShadow: [
+                            BoxShadow(
+                              offset: Offset(-4, 4),
+                              color: Colors.grey,
+                            ),
+                          ],
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             BlocBuilder<BookBloc, BookState>(
                               builder: (context, state) {
-                               if(state is BookLoading){
-                                return Center(child: CircularProgressIndicator(),);
-                               }else if(state is BookError){
-                                return Center(child: Text('error'),);
-                               }else if(state is BookLoaded){
-                                return BooksList(title: 'Latest Added', books: state.books.map((book)=>book['bookname'] ?? 'No Title').toList(), images: images, authors: state.books.map((book)=>book['authername'] ?? 'No Title').toList(), gonores: state.books.map((book)=>book['category'] ?? 'No Title').toList(), colors: colors);
-                               }else{
-                                return Center(child: Text('not known'),);
-                               }
+                                if (state is BookLoading) {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else if (state is BookError) {
+                                  return Center(child: Text('error'));
+                                } else if (state is BookLoaded) {
+                                  final book = state.books;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Latest Added',
+                                        style: AppFonts.heading3,
+                                      ),
+                                      Gap(10),
+                                      SizedBox(
+                                        height: 220,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: book.length,
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                  ),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder:
+                                                          (context) => BookInfo(
+                                                            book: book[index],
+                                                          ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Book(
+                                                      image: images[index],
+                                                      color: colors[index],
+                                                    ),
+                                                    Gap(5),
+                                                    SizedBox(
+                                                      width: 80,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        spacing: 5,
+                                                        children: [
+                                                          Text(
+                                                            book[index]['bookname'],
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            book[index]['authername'],
+                                                            style:
+                                                                AppFonts.body2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                          Container(
+                                                            height: 18,
+                                                            width: 80,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  color: Color(
+                                                                    0xFFE8E8E8,
+                                                                  ),
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        10,
+                                                                      ),
+                                                                ),
+                                                            child: Text(
+                                                              book[index]['category'],
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style:
+                                                                  AppFonts
+                                                                      .body2,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return Center(child: Text('not known'));
+                                }
                               },
                             ),
                             BooksList(
@@ -173,7 +292,7 @@ class HomeScreen extends StatelessWidget {
                               gonores: gonores,
                               colors: colors,
                             ),
-                          ]
+                          ],
                         ),
                       ),
                     ),

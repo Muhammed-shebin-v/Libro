@@ -26,3 +26,10 @@ class LoginFailure extends LoginState {
   @override
   List<Object> get props => [message];
 }
+class UserNotAvailable extends LoginFailure {
+  UserNotAvailable() : super("User Not Found");
+}
+
+class OfflineError extends LoginFailure {
+  OfflineError() : super("No internet connection. Please try again later.");
+}

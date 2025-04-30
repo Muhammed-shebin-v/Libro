@@ -46,13 +46,12 @@ class BooksList extends StatelessWidget {
                         children: [
                           Text(
                             books[index],
-                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 12),
                           ),
                           Text(
                             authors[index],
                             style: AppFonts.body2,
-                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Container(

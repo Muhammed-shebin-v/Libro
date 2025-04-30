@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+
 class CustomForm extends StatelessWidget {
   final String title;
   final String hint;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
-  const CustomForm({
+   bool obsecure;
+   CustomForm({
     super.key,
     required this.title,
     required this.controller,
     required this.validator,
     required this.hint,
+    this.obsecure=false,
     this.suffixIcon
   });
 
@@ -23,6 +26,7 @@ class CustomForm extends StatelessWidget {
       children: [
         Text(title, style: TextStyle(fontSize: 20)),
         TextFormField(
+          obscureText: obsecure,
           validator: validator,
           controller: controller,
           decoration: InputDecoration(
@@ -50,6 +54,7 @@ class CustomForm extends StatelessWidget {
             filled: true,
             hintText: hint,
             border: OutlineInputBorder(),
+            
           ),
         ),
         Gap(10),

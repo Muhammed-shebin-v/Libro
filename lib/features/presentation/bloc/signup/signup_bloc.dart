@@ -22,9 +22,18 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       } else {
         emit(SignupFailure("Signup failed. Please try again."));
       }
-    } catch (e) {
-      log("Error in creating user: $e");
-      emit(SignupFailure(e.toString()));
+    } on FirebaseAuthException catch (e) {
+    if (e.code == 'email-already-in-use') {
+      emit(UserAlreadyExists());
+    } else if (e.code == 'network-request-failed') {
+      emit(OfflineError());
+    } else {
+      emit(SignupFailure("Signup failed: ${e.message}"));
     }
+  } catch (e) {
+    log("Error in creating user: $e");
+    emit(SignupFailure("An unexpected error occurred: ${e.toString()}"));
   }
 }
+}
+

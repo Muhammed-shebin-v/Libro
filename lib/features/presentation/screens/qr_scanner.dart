@@ -20,133 +20,135 @@ class QrScanner extends StatelessWidget {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              Center(
-                child: Container(
-                  height: 300,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(15),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Center(
+                  child: Container(
+                    height: 300,
+                    width: 300,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
                 ),
-              ),
-              Gap(20),
-              CustomContainer(
-                color: AppColors.color30,
-                radius: BorderRadius.circular(20),
-                shadow: 3,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.25,
-                            child: Book(
-                              image: 'lib/assets/images.jpeg',
-                              color: Colors.teal,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'The way of Nameless',
-                                style: AppFonts.heading3,
-                              ),
-                              Text('Author name', style: AppFonts.body1),
-                              Text(
-                                '196 pages • 1000readers • 4.3+rating',
-                                style: AppFonts.body2,
-                              ),
-                              Text(
-                                'Fictional',
-                                style: AppFonts.body2,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Gap(30),
-                      Text('Add your review', style: AppFonts.heading3),
-                      TextFormField(
-                        autofocus: true,
-                        maxLines: 3,
-                        maxLength: 120,
-                        keyboardType: TextInputType.multiline,
-                        decoration: InputDecoration(
-                          hintText: 'Text here',
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                      ),
-                      Text('Add your rating', style: AppFonts.heading3),
-                      Container(
-                        height: 50,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Gap(20),
+                CustomContainer(
+                  color: AppColors.color30,
+                  radius: BorderRadius.circular(20),
+                  shadow: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            Text('Rate this Book'),
-                            Gap(20),
-                            Icon(Icons.star),
-                            Icon(Icons.star),
-                            Icon(Icons.star),
-                            Icon(Icons.star),
-                            Icon(Icons.star),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              child: Book(
+                                image: 'lib/assets/images.jpeg',
+                                color: Colors.teal,
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'The way of Nameless',
+                                  style: AppFonts.heading3,
+                                ),
+                                Text('Author name', style: AppFonts.body1),
+                                Text(
+                                  '196 pages • 1000readers • 4.3+rating',
+                                  style: AppFonts.body2,
+                                ),
+                                Text(
+                                  'Fictional',
+                                  style: AppFonts.body2,
+                                ),
+                              ],
+                            ),
                           ],
                         ),
-                      ),
-                    ],
+                        Gap(30),
+                        Text('Add your review', style: AppFonts.heading3),
+                        TextFormField(
+                          autofocus: true,
+                          maxLines: 3,
+                          maxLength: 120,
+                          keyboardType: TextInputType.multiline,
+                          decoration: InputDecoration(
+                            hintText: 'Text here',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        Text('Add your rating', style: AppFonts.heading3),
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text('Rate this Book'),
+                              Gap(20),
+                              Icon(Icons.star),
+                              Icon(Icons.star),
+                              Icon(Icons.star),
+                              Icon(Icons.star),
+                              Icon(Icons.star),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Gap(20),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SlideAction(
-                  height: 80,
-                  text: 'Slide to Return',
-                  textColor: Colors.black,
-                  innerColor: Colors.white,
-                  outerColor: AppColors.color10,
-                  sliderButtonIcon: const Icon(
-                    Icons.arrow_forward,
-                    color: Colors.black,
+                Gap(20),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SlideAction(
+                    height: 80,
+                    text: 'Slide to Return',
+                    textColor: Colors.black,
+                    innerColor: Colors.white,
+                    outerColor: AppColors.color10,
+                    sliderButtonIcon: const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.black,
+                    ),
+                    key: slideActionKey,
+                    animationDuration: Duration(milliseconds: 300),
+                    onSubmit: () async{
+                     await  Future.delayed(
+                        const Duration(seconds: 2),
+                        () => slideActionKey.currentState!.reset(),
+                      );
+                      Navigator.pop(context);
+                    },
+                    elevation: 0,
                   ),
-                  key: slideActionKey,
-                  animationDuration: Duration(milliseconds: 300),
-                  onSubmit: () async{
-                   await  Future.delayed(
-                      const Duration(seconds: 2),
-                      () => slideActionKey.currentState!.reset(),
-                    );
-                    Navigator.pop(context);
-                  },
-                  elevation: 0,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

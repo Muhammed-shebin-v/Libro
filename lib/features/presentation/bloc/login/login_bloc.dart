@@ -15,18 +15,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future<void> _onLoginRequested(
-      LoginRequested event, Emitter<LoginState> emit) async {
+    LoginRequested event,
+    Emitter<LoginState> emit,
+  ) async {
     emit(LoginLoading());
 
     try {
-      User? user =
-          await _authService.signIn(event.email, event.password);
+      User? user = await _authService.signIn(event.email, event.password);
       if (user != null) {
         emit(LoginSuccess(user));
-
       } else {
         emit(LoginFailure("Invalid credentials"));
       }
+    }on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+        emit(UserNotAvailable()); //
+    } else if (e.code == 'network-request-failed') {
+      emit(OfflineError());
+    } else {
+      emit(LoginFailure("Login failed: ${e.message}"));
+    }
     } catch (e) {
       emit(LoginFailure(e.toString()));
     }

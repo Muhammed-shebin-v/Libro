@@ -19,12 +19,12 @@ class Subscription extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Gap(30),
+              Gap(5),
               Text('Get Started Today!', style: AppFonts.heading1),
               Text(
                 'For borrowing books you need to purchase our membership...',
               ),
-              Gap(40),
+              Gap(20),
               CustomContainer(
                 color: AppColors.color30,
                 radius: BorderRadius.circular(18),
@@ -62,7 +62,7 @@ class Subscription extends StatelessWidget {
                   ),
                 ),
               ),
-              Gap(40),
+              Gap(20),
               Text('Membership Pricing',style: GoogleFonts.kalnia(fontSize: 22),),
               Gap(10),
               CustomContainer(
@@ -160,7 +160,7 @@ class Subscription extends StatelessWidget {
                   ),
                 ),
               ),
-              Gap(40),
+              Gap(20),
               CustomLongButton(title: 'Complete', ontap: (){
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavigation()));
               })

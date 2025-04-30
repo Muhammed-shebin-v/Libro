@@ -15,3 +15,5 @@ class SignupUser extends SignupEvent {
   @override
   List<Object> get props => [username, email, password];
 }
+
+

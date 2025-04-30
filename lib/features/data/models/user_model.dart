@@ -10,7 +10,6 @@ class UserModel {
   final String email;
   final String address;
   final String phoneNumber;
-  // Add more fields as needed
 
   UserModel({
     required this.uid,
@@ -21,7 +20,6 @@ class UserModel {
     required this.phoneNumber,
   });
 
-  // Convert to Map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
@@ -34,7 +32,6 @@ class UserModel {
     };
   }
 
-  // Create UserModel from Firestore document
   factory UserModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return UserModel(
@@ -48,11 +45,9 @@ class UserModel {
   }
 }
 
-// Authentication Service
 class AuthService1 {
   final _auth = FirebaseAuth.instance;
-  
-  // Step 1: Create auth account only
+
   Future<User?> createAuthUser(String email, String password) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
@@ -66,7 +61,6 @@ class AuthService1 {
     }
   }
 
-  // Regular sign in
   Future<User?> signIn(String email, String password) async {
     try {
       final userCredential = await _auth.signInWithEmailAndPassword(
@@ -80,7 +74,6 @@ class AuthService1 {
     }
   }
 
-  // Sign out
   Future<void> signOut() async {
     try {
       await _auth.signOut();
@@ -89,24 +82,19 @@ class AuthService1 {
     }
   }
 
-  // Get current user
   User? get currentUser => _auth.currentUser;
 }
 
-// Database Service for Users
 class UserDatabaseService {
   final _firestore = FirebaseFirestore.instance;
   final String? uid;
 
   UserDatabaseService({this.uid});
 
-  // Collection reference
   CollectionReference get usersCollection => _firestore.collection('users');
 
-  // Get user document reference
   DocumentReference get userDocument => usersCollection.doc(uid);
 
-  // Step 2: Create user profile in Firestore
   Future<bool> createUserProfile({
     required String uid,
     required String username,
@@ -116,14 +104,12 @@ class UserDatabaseService {
     required String phoneNumber,
   }) async {
     try {
-      // Check if username is taken
       final isAvailable = await isUsernameAvailable(username);
       if (!isAvailable) {
         log('Username already taken');
         return false;
       }
-      
-      // Create user model
+
       final userModel = UserModel(
         uid: uid,
         username: username,
@@ -132,8 +118,7 @@ class UserDatabaseService {
         address: address,
         phoneNumber: phoneNumber,
       );
-      
-      // Save to Firestore
+
       await usersCollection.doc(uid).set(userModel.toMap());
       log('User profile created successfully');
       return true;
@@ -143,7 +128,6 @@ class UserDatabaseService {
     }
   }
 
-  // Update user data
   Future<void> updateUserData({
     String? username,
     String? fullName,
@@ -152,39 +136,35 @@ class UserDatabaseService {
   }) async {
     try {
       Map<String, dynamic> data = {};
-      
-      // Check username availability if changing
+
       if (username != null) {
         final currentData = await userDocument.get();
         final currentUsername = currentData['username'];
-        
+
         if (username != currentUsername) {
           final isAvailable = await isUsernameAvailable(username);
           if (!isAvailable) {
             throw Exception('Username already taken');
           }
         }
-        
+
         data['username'] = username;
       }
-      
-      // Only add fields that need to be updated
+
       if (fullName != null) data['fullName'] = fullName;
       if (address != null) data['address'] = address;
       if (phoneNumber != null) data['phoneNumber'] = phoneNumber;
-      
-      // Add last updated timestamp
+
       data['lastUpdated'] = FieldValue.serverTimestamp();
-      
+
       await userDocument.update(data);
       log('User data updated successfully');
     } catch (e) {
       log('Error updating user data: $e');
-      throw e;
+      rethrow;
     }
   }
 
-  // Get user data as stream
   Stream<UserModel?> get userData {
     return userDocument.snapshots().map((doc) {
       if (doc.exists) {
@@ -194,7 +174,6 @@ class UserDatabaseService {
     });
   }
 
-  // Get user data as future (one-time read)
   Future<UserModel?> getUserData() async {
     try {
       final doc = await userDocument.get();
@@ -208,7 +187,6 @@ class UserDatabaseService {
     }
   }
 
-  // Check if a user profile exists in Firestore
   Future<bool> doesUserProfileExist(String uid) async {
     try {
       final doc = await usersCollection.doc(uid).get();
@@ -219,14 +197,14 @@ class UserDatabaseService {
     }
   }
 
-  // Get user by username (useful for username availability check)
   Future<bool> isUsernameAvailable(String username) async {
     try {
-      final querySnapshot = await usersCollection
-          .where('username', isEqualTo: username)
-          .limit(1)
-          .get();
-      
+      final querySnapshot =
+          await usersCollection
+              .where('username', isEqualTo: username)
+              .limit(1)
+              .get();
+
       return querySnapshot.docs.isEmpty;
     } catch (e) {
       log('Error checking username availability: $e');
@@ -234,22 +212,19 @@ class UserDatabaseService {
     }
   }
 
-  // Delete user (both Auth and Firestore data)
   Future<void> deleteUser() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // Delete user data from Firestore
         await userDocument.delete();
-        
-        // Delete user from Firebase Auth
+
         await user.delete();
-        
+
         log('User deleted successfully');
       }
     } catch (e) {
       log('Error deleting user: $e');
-      throw e;
+      rethrow;
     }
   }
 }
