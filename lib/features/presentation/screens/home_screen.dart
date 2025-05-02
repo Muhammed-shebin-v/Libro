@@ -166,6 +166,9 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                         child: Column(
+
+//new htings
+
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             BlocBuilder<BookBloc, BookState>(
