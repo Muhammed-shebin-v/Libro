@@ -257,7 +257,7 @@ class _BoookState extends State<Boook> {
                                 images: images,
                                 authors: authors,
                                 gonores: gonores,
-                                colors: colors,
+                                // colors: colors,
                               ),
                             ],
                           ),

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class Book extends StatelessWidget {
   final String image;
-  final Color color;
-  const Book({super.key,required this.image,required this.color});
+  // final Color color;
+  const Book({super.key,required this.image,
+  // required this.color
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class Book extends StatelessWidget {
               width: 80,
               height: 110,
               decoration: BoxDecoration(
-                color: color,
+                color: Colors.grey,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(10),
                   topLeft: Radius.circular(10),
@@ -34,7 +36,7 @@ class Book extends StatelessWidget {
                           topRight: Radius.circular(10),
                         ),
                       ),
-                      child: Image(image: AssetImage(image),fit: BoxFit.fill,),
+                      child: Image.network(image,fit: BoxFit.fill,),
                     ),
                   ),
                   Positioned(

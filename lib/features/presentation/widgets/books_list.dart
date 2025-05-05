@@ -10,8 +10,10 @@ class BooksList extends StatelessWidget {
   final List images;
   final List authors;
   final List gonores;
-  final List colors;
-   const BooksList({super.key,required this.title,required this.books,required this.images,required this.authors,required this.gonores,required this.colors});
+  // final List colors;
+   const BooksList({super.key,required this.title,required this.books,required this.images,required this.authors,required this.gonores,
+  //  required this.colors
+   });
 
 
   @override
@@ -36,7 +38,7 @@ class BooksList extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                   Book(image: images[index],color: colors[index],),
+                   Book(image: images[index],),
                     Gap(5),
                     SizedBox(
                       width: 80,

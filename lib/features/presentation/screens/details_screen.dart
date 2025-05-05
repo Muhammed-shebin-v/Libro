@@ -1,7 +1,10 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:libro/features/data/models/user_model.dart';
 import 'package:libro/features/presentation/screens/bottom_navigation.dart';
 import 'package:libro/core/themes/fonts.dart';
@@ -36,6 +39,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
   final _placeController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+    String? _uploadedImageUrl;
+  final cloudinary = CloudinaryPublic(
+    'dwzeuyi12',
+    'unsigned_uploads',
+    cache: false,
+  );
+  XFile? image;
 
   @override
   void dispose() {
@@ -44,15 +54,41 @@ class _DetailsScreenState extends State<DetailsScreen> {
     _placeController.dispose();
     super.dispose();
   }
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    setState(() {
+      image = pickedFile;
+    });
+    if (pickedFile != null) {
+      await _uploadToCloudinary(File(pickedFile.path));
+    }
+  }
+
+  Future<void> _uploadToCloudinary(File imageFile) async {
+    try {
+      CloudinaryResponse response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(
+          imageFile.path,
+          resourceType: CloudinaryResourceType.Image,
+        ),
+      );
+      // setState(() {
+      _uploadedImageUrl = response.secureUrl;
+      // });
+      log("Image Uploaded: $_uploadedImageUrl");
+    } catch (e) {
+      log('Cloudinary upload error: $e');
+    }
+  }
 
   bool _isLoading = false;
 
   Future<void> _saveUserDetails() async {
-    log('fdf');
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
-        log('true');
       });
 
       try {
@@ -63,13 +99,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
           email: widget.email,
           address: _placeController.text.trim(),
           phoneNumber: _phoneNumberController.text.trim(),
+          imgUrl: _uploadedImageUrl!
         );
 
-        await _firestore
-            .collection('users')
-            .doc(widget.uid)
-            .set(userModel.toMap());
-
+        await _firestore.collection('users').doc(widget.uid).set(userModel.toMap());
+        
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -120,32 +154,27 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           style: AppFonts.heading1,
                         ),
                         Text('Enter more details to know more about you'),
-                        Gap(40),
+                        Gap(80),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 100,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(18),
-                                  border: Border.all(color: Colors.black),
-                                ),
-                                child: Icon(Icons.image, size: 45),
-                              ),
-                            ),
-                            Align(
-                              child: Lottie.asset(
-                                'lib/assets/Animation - 1742030119292.json',
-                                height: 250,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                          ],
+                        Center(
+                          child:  InkWell(
+                        onTap: () => _pickImage(),
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child:
+                              image != null
+                                  ? Image.file(File(image!.path,),fit: BoxFit.fill,)
+                                  : Icon(Icons.image),
                         ),
+                      ),
+                        ),
+                           
+                        Gap(80),
                         CustomForm(
                           title: 'Full Name',
                           hint: 'enter Full Name',

@@ -158,7 +158,7 @@ class _BoookState extends State<BookInfo> {
                     Align(
                       alignment: Alignment(-0.05, -0.95),
                       child: BookLarge(
-                        image: 'lib/assets/images.jpeg',
+                        image: widget.book['imgUrl'],
                         color: Colors.teal,
                       ),
                     ),
@@ -258,7 +258,7 @@ class _BoookState extends State<BookInfo> {
                                 images: images,
                                 authors: authors,
                                 gonores: gonores,
-                                colors: colors,
+                                // colors: colors,
                               ),
                             ],
                           ),

@@ -34,7 +34,7 @@ class BookLarge extends StatelessWidget {
                           topRight: Radius.circular(10),
                         ),
                       ),
-                      child: Image(image: AssetImage(image),fit: BoxFit.fill,),
+                      child: Image.network(image,fit: BoxFit.fill,),
                     ),
                   ),
                   Positioned(

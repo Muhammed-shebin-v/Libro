@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
-import 'package:libro/features/data/models/book.dart';
 import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
 import 'package:libro/features/presentation/bloc/book/books_state.dart';
 import 'package:libro/features/presentation/screens/book_info.dart';
@@ -15,7 +14,7 @@ import 'package:libro/features/presentation/widgets/custom_ad.dart';
 import 'package:libro/features/presentation/widgets/search_bar.dart';
 import 'package:lottie/lottie.dart';
 
-// pading fo rbooks
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
@@ -25,7 +24,8 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFFDF4DC),
       appBar: AppBar(
         backgroundColor: Color(0xFFFDF4DC),
-        leading: Image(image: AssetImage('lib/assets/IMG_0899 3.JPG')),
+        // leading: Image(image: AssetImage('lib/assets/IMG_0899 3.JPG')),
+        automaticallyImplyLeading: false,
         title: Text(
           'Libro',
           style: GoogleFonts.k2d(fontSize: 30, letterSpacing: 5),
@@ -122,7 +122,7 @@ class HomeScreen extends StatelessWidget {
                       top: 0,
                       left: 0,
                       child: Container(
-                        padding: EdgeInsets.only(top: 30, left: 20),
+                        padding: EdgeInsets.only(top: 30,),
                         height: 850,
                         width: MediaQuery.of(context).size.width * 0.95,
                         decoration: BoxDecoration(
@@ -136,12 +136,12 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                         child: BooksList(
-                          title: 'Books of The Week',
+                          title: '  Books of The Week',
                           books: books,
                           authors: authors,
                           images: images,
                           gonores: gonores,
-                          colors: colors,
+                          // colors: colors,
                         ),
                       ),
                     ),
@@ -186,7 +186,7 @@ class HomeScreen extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Latest Added',
+                                        '  Latest Added',
                                         style: AppFonts.heading3,
                                       ),
                                       Gap(10),
@@ -218,8 +218,8 @@ class HomeScreen extends StatelessWidget {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Book(
-                                                      image: images[index],
-                                                      color: colors[index],
+                                                      image: book[index]['imgUrl'],
+                                                      
                                                     ),
                                                     Gap(5),
                                                     SizedBox(
@@ -288,12 +288,12 @@ class HomeScreen extends StatelessWidget {
                               },
                             ),
                             BooksList(
-                              title: 'Most Read',
+                              title: '  Most Read',
                               books: books,
                               authors: authors,
                               images: images,
                               gonores: gonores,
-                              colors: colors,
+                             
                             ),
                           ],
                         ),

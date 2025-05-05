@@ -149,7 +149,7 @@ class User extends StatelessWidget {
                                 images: images,
                                 authors: authors,
                                 gonores: gonores,
-                                colors: colors,
+                                // colors: colors,
                               ),
                             ),
                              Padding(
@@ -160,7 +160,7 @@ class User extends StatelessWidget {
                                 images: images,
                                 authors: authors,
                                 gonores: gonores,
-                                colors: colors,
+                                // colors: colors,
                               ),
                             ),
                           ],

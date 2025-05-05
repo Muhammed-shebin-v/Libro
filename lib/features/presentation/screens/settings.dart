@@ -14,7 +14,6 @@ class Settings extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.color60,
         title: Text('Settings and Activitiy', style: AppFonts.heading2),
-        leading: Icon(Icons.arrow_back),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -89,9 +88,9 @@ class Settings extends StatelessWidget {
                 ),
               ),
               Gap(50),
-              Text('Login', style: AppFonts.heading3),
+
               Gap(10),
-              Text('Add account', style: TextStyle(color: Colors.blue)),
+             
               Gap(5),
               InkWell(
                 onTap: (){showLogoutDialog(contextS);},

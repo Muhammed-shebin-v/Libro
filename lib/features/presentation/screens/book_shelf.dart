@@ -49,7 +49,7 @@ class Bookshelf extends StatelessWidget {
                   images: images,
                   authors: authors,
                   gonores: gonores,
-                  colors: colors,
+                  // colors: colors,
                 ),
                 Gap(20),
                 Container(
@@ -224,7 +224,7 @@ class Bookshelf extends StatelessWidget {
                               child: Book(
                                 image:
                                     'lib/assets/book-covers-big-2019101610.jpg',
-                                color: const Color.fromARGB(255, 231, 52, 52),
+                                // color: const Color.fromARGB(255, 231, 52, 52),
                               ),
                             ),
                           ],

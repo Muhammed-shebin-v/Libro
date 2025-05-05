@@ -10,6 +10,7 @@ class UserModel {
   final String email;
   final String address;
   final String phoneNumber;
+  final String imgUrl;
 
   UserModel({
     required this.uid,
@@ -18,6 +19,9 @@ class UserModel {
     required this.email,
     required this.address,
     required this.phoneNumber,
+    required this.imgUrl,
+
+
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +33,9 @@ class UserModel {
       'address': address,
       'phoneNumber': phoneNumber,
       'createdAt': FieldValue.serverTimestamp(),
+      'imgUrl':imgUrl,
+      'isBlock':false,
+      'score':0,
     };
   }
 
@@ -41,6 +48,7 @@ class UserModel {
       email: data['email'] ?? '',
       address: data['address'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
+      imgUrl: data['imgUrl']??''
     );
   }
 }
@@ -102,6 +110,7 @@ class UserDatabaseService {
     required String fullName,
     required String address,
     required String phoneNumber,
+    required String imgurl
   }) async {
     try {
       final isAvailable = await isUsernameAvailable(username);
@@ -117,7 +126,7 @@ class UserDatabaseService {
         email: email,
         address: address,
         phoneNumber: phoneNumber,
-      );
+        imgUrl: imgurl,);
 
       await usersCollection.doc(uid).set(userModel.toMap());
       log('User profile created successfully');
