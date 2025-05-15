@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/data/models/user_model.dart';
 import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
 import 'package:libro/features/presentation/bloc/book/books_state.dart';
 import 'package:libro/features/presentation/screens/book_info.dart';
@@ -13,10 +14,28 @@ import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/custom_ad.dart';
 import 'package:libro/features/presentation/widgets/search_bar.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
+
+  Future<UserModel?> getUserFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final uid = prefs.getString('uid');
+    if (uid == null) return null;
+    return UserModel(
+      uid: uid,
+      username: prefs.getString('username') ?? '',
+      fullName: prefs.getString('fullName') ?? '',
+      email: prefs.getString('email') ?? '',
+      phoneNumber: prefs.getString('phone') ?? '',
+      address: prefs.getString('address') ?? '',
+      imgUrl: prefs.getString('image') ?? '',
+      createdAt: DateTime.parse(
+        prefs.getString('createdDate') ?? DateTime.now().toIso8601String(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,205 +72,225 @@ class HomeScreen extends StatelessWidget {
           Gap(10),
         ],
       ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: FutureBuilder<UserModel?>(
+        future: getUserFromPrefs(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Something went wrong"));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: Text("No user found"));
+          }
+          final userData = snapshot.data!;
+          return SingleChildScrollView(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: Text(
-                            'Good   Morning\nSarah John',
-                            style: GoogleFonts.kalnia(fontSize: 30),
-                          ),
-                        ),
-                        Expanded(
-                          child: Lottie.asset(
-                            'lib/assets/Animation - 1742030119292.json',
-                            height: 160,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Gap(20),
-                    CustomSearchBar(),
-                    Gap(40),
-                    SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: books.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 15.0,
-                                ),
-                                child: Image(
-                                  fit: BoxFit.fill,
-                                  image: AssetImage(images[index]),
-                                  width: 50,
-                                  height: 70,
-                                ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Good Morning\n${userData.username}',
+                                style: GoogleFonts.kalnia(fontSize: 30),
                               ),
-                              Gap(10),
-                              Text(gonores[index]),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    Gap(10),
-                    CustomAd(),
-                    Gap(30),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 850,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      child: Container(
-                        padding: EdgeInsets.only(top: 30,),
-                        height: 850,
-                        width: MediaQuery.of(context).size.width * 0.95,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFEDAA1),
-                          border: Border.all(),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(25),
-                          ),
-                          boxShadow: [
-                            BoxShadow(offset: Offset(4, 4), color: Colors.grey),
-                          ],
-                        ),
-                        child: BooksList(
-                          title: '  Books of The Week',
-                          books: books,
-                          authors: authors,
-                          images: images,
-                          gonores: gonores,
-                          // colors: colors,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 300,
-                      right: 0,
-                      child: Container(
-                        padding: EdgeInsets.only(top: 30),
-                        height: 550,
-                        width: MediaQuery.of(context).size.width * 0.95,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFDF4DC),
-                          border: Border.all(),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              offset: Offset(-4, 4),
-                              color: Colors.grey,
+                            ),
+                            Expanded(
+                              child: Lottie.asset(
+                                'lib/assets/Animation - 1742030119292.json',
+                                height: 160,
+                                fit: BoxFit.fill,
+                              ),
                             ),
                           ],
                         ),
-                        child: Column(
-
-//new htings
-
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            BlocBuilder<BookBloc, BookState>(
-                              builder: (context, state) {
-                                if (state is BookLoading) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (state is BookError) {
-                                  return Center(child: Text('error'));
-                                } else if (state is BookLoaded) {
-                                  final book = state.books;
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '  Latest Added',
-                                        style: AppFonts.heading3,
-                                      ),
-                                      Gap(10),
-                                      SizedBox(
-                                        height: 220,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: book.length,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 10,
-                                                  ),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder:
-                                                          (context) => BookInfo(
-                                                            book: book[index],
-                                                          ),
-                                                    ),
-                                                  );
-                                                },
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Book(
-                                                      image: book[index]['imgUrl'],
-                                                      
-                                                    ),
-                                                    Gap(5),
-                                                    SizedBox(
-                                                      width: 80,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        spacing: 5,
-                                                        children: [
-                                                          Text(
-                                                            book[index]['bookname'],
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            book[index]['authername'],
-                                                            style:
-                                                                AppFonts.body2,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                          Container(
-                                                            height: 18,
-                                                            width: 80,
-                                                            decoration:
-                                                                BoxDecoration(
+                        Gap(20),
+                        CustomSearchBar(),
+                        Gap(40),
+                        SizedBox(
+                          height: 100,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: books.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15.0,
+                                    ),
+                                    child: Image(
+                                      fit: BoxFit.fill,
+                                      image: AssetImage(images[index]),
+                                      width: 50,
+                                      height: 70,
+                                    ),
+                                  ),
+                                  Gap(10),
+                                  Text(gonores[index]),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        Gap(10),
+                        CustomAd(),
+                        Gap(30),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 850,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          child: Container(
+                            padding: EdgeInsets.only(top: 30),
+                            height: 850,
+                            width: MediaQuery.of(context).size.width * 0.95,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFEDAA1),
+                              border: Border.all(),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(25),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: Offset(4, 4),
+                                  color: Colors.grey,
+                                ),
+                              ],
+                            ),
+                            child: BooksList(
+                              title: '  Books of The Week',
+                              books: books,
+                              authors: authors,
+                              images: images,
+                              gonores: gonores,
+                              // colors: colors,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 300,
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.only(top: 30),
+                            height: 550,
+                            width: MediaQuery.of(context).size.width * 0.95,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFDF4DC),
+                              border: Border.all(),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: Offset(-4, 4),
+                                  color: Colors.grey,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              //new htings
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                BlocBuilder<BookBloc, BookState>(
+                                  builder: (context, state) {
+                                    if (state is BookLoading) {
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    } else if (state is BookError) {
+                                      return Center(child: Text('error'));
+                                    } else if (state is BookLoaded) {
+                                      final book = state.books;
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '  Latest Added',
+                                            style: AppFonts.heading3,
+                                          ),
+                                          Gap(10),
+                                          SizedBox(
+                                            height: 220,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: book.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                      ),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder:
+                                                              (
+                                                                context,
+                                                              ) => BookInfo(
+                                                                userid: userData
+                                                                    .uid,
+                                                                book:
+                                                                    book[index],
+                                                              ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Book(
+                                                          image:
+                                                              book[index]['imgUrl'],
+                                                        ),
+                                                        Gap(5),
+                                                        SizedBox(
+                                                          width: 80,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            spacing: 5,
+                                                            children: [
+                                                              Text(
+                                                                book[index]['bookName'],
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                    ),
+                                                              ),
+                                                              Text(
+                                                                book[index]['authorName'],
+                                                                style:
+                                                                    AppFonts
+                                                                        .body2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                              Container(
+                                                                height: 18,
+                                                                width: 80,
+                                                                decoration: BoxDecoration(
                                                                   color: Color(
                                                                     0xFFE8E8E8,
                                                                   ),
@@ -260,51 +299,52 @@ class HomeScreen extends StatelessWidget {
                                                                         10,
                                                                       ),
                                                                 ),
-                                                            child: Text(
-                                                              book[index]['category'],
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style:
-                                                                  AppFonts
-                                                                      .body2,
-                                                            ),
+                                                                child: Text(
+                                                                  book[index]['category'],
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      AppFonts
+                                                                          .body2,
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
-                                                        ],
-                                                      ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return Center(child: Text('not known'));
-                                }
-                              },
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      return Center(child: Text('not known'));
+                                    }
+                                  },
+                                ),
+                                BooksList(
+                                  title: '  Most Read',
+                                  books: books,
+                                  authors: authors,
+                                  images: images,
+                                  gonores: gonores,
+                                ),
+                              ],
                             ),
-                            BooksList(
-                              title: '  Most Read',
-                              books: books,
-                              authors: authors,
-                              images: images,
-                              gonores: gonores,
-                             
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

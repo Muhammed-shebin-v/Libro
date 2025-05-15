@@ -29,7 +29,6 @@ class _BoookState extends State<Boook> {
           child: Column(
             children: [
               Gap(20),
-
               SizedBox(
                 height: 1060,
                 child: Stack(

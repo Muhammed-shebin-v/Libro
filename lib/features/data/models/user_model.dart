@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// User Model
+
 class UserModel {
   final String uid;
   final String username;
@@ -11,6 +11,10 @@ class UserModel {
   final String address;
   final String phoneNumber;
   final String imgUrl;
+  final DateTime createdAt;
+  final bool? isBlock;
+  final int? score;
+
 
   UserModel({
     required this.uid,
@@ -20,7 +24,9 @@ class UserModel {
     required this.address,
     required this.phoneNumber,
     required this.imgUrl,
-
+    required this.createdAt,
+    this.isBlock,
+    this.score,
 
   });
 
@@ -32,7 +38,7 @@ class UserModel {
       'email': email,
       'address': address,
       'phoneNumber': phoneNumber,
-      'createdAt': FieldValue.serverTimestamp(),
+      'createdAt': DateTime.now(),
       'imgUrl':imgUrl,
       'isBlock':false,
       'score':0,
@@ -48,7 +54,10 @@ class UserModel {
       email: data['email'] ?? '',
       address: data['address'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
-      imgUrl: data['imgUrl']??''
+      imgUrl: data['imgUrl']??'',
+      createdAt: data['createdAt']?? '',
+      isBlock: data['isBlock'] ?? false,
+      score: data['score'] ?? 0,
     );
   }
 }
@@ -103,39 +112,39 @@ class UserDatabaseService {
 
   DocumentReference get userDocument => usersCollection.doc(uid);
 
-  Future<bool> createUserProfile({
-    required String uid,
-    required String username,
-    required String email,
-    required String fullName,
-    required String address,
-    required String phoneNumber,
-    required String imgurl
-  }) async {
-    try {
-      final isAvailable = await isUsernameAvailable(username);
-      if (!isAvailable) {
-        log('Username already taken');
-        return false;
-      }
+  // Future<bool> createUserProfile({
+  //   required String uid,
+  //   required String username,
+  //   required String email,
+  //   required String fullName,
+  //   required String address,
+  //   required String phoneNumber,
+  //   required String imgurl
+  // }) async {
+  //   try {
+  //     final isAvailable = await isUsernameAvailable(username);
+  //     if (!isAvailable) {
+  //       log('Username already taken');
+  //       return false;
+  //     }
 
-      final userModel = UserModel(
-        uid: uid,
-        username: username,
-        fullName: fullName,
-        email: email,
-        address: address,
-        phoneNumber: phoneNumber,
-        imgUrl: imgurl,);
+  //     final userModel = UserModel(
+  //       uid: uid,
+  //       username: username,
+  //       fullName: fullName,
+  //       email: email,
+  //       address: address,
+  //       phoneNumber: phoneNumber,
+  //       imgUrl: imgurl,);
 
-      await usersCollection.doc(uid).set(userModel.toMap());
-      log('User profile created successfully');
-      return true;
-    } catch (e) {
-      log('Error creating user profile: $e');
-      return false;
-    }
-  }
+  //     await usersCollection.doc(uid).set(userModel.toMap());
+  //     log('User profile created successfully');
+  //     return true;
+  //   } catch (e) {
+  //     log('Error creating user profile: $e');
+  //     return false;
+  //   }
+  // }
 
   Future<void> updateUserData({
     String? username,

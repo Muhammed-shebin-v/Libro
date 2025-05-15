@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/domain/repository/borrow.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
 import 'package:libro/features/presentation/widgets/large_book.dart';
@@ -9,7 +10,8 @@ import 'package:libro/features/presentation/widgets/large_book.dart';
 
 class BookInfo extends StatefulWidget {
   final  book;
-  const BookInfo({super.key,required this.book});
+  final userid;
+  const BookInfo({super.key,required this.book,required this.userid});
 
   @override
   State<BookInfo> createState() => _BoookState();
@@ -23,7 +25,13 @@ class _BoookState extends State<BookInfo> {
       appBar: AppBar(
         backgroundColor: AppColors.color60,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_outlined)),
+          IconButton(onPressed: () {
+            BorrowService().borrowBook(
+              userId: widget.userid,
+              bookId: widget.book['uid'],
+              context: context,
+            );
+          }, icon: Icon(Icons.shopping_bag)),
         ],
       ),
       body: SingleChildScrollView(
@@ -77,10 +85,10 @@ class _BoookState extends State<BookInfo> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    widget.book['bookname'],
+                                    widget.book['bookName'],
                                     style: AppFonts.body1,
                                   ),
-                                  Text(widget.book['authername']),
+                                  Text(widget.book['authorName']),
                                   CustomContainer(
                                     color: AppColors.color60,
                                     radius: BorderRadius.circular(25),

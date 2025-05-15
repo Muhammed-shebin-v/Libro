@@ -6,12 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:libro/features/data/models/user_model.dart';
-import 'package:libro/features/presentation/screens/bottom_navigation.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/screens/subscription.dart';
 import 'package:libro/features/presentation/widgets/form.dart';
 import 'package:libro/features/presentation/widgets/long_button.dart';
-import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailsScreen extends StatefulWidget {
   final String uid;
@@ -74,9 +73,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           resourceType: CloudinaryResourceType.Image,
         ),
       );
-      // setState(() {
       _uploadedImageUrl = response.secureUrl;
-      // });
       log("Image Uploaded: $_uploadedImageUrl");
     } catch (e) {
       log('Cloudinary upload error: $e');
@@ -84,6 +81,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   bool _isLoading = false;
+  
+  Future<void> saveUserToPrefs(UserModel userModel) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('uid', userModel.uid);
+    await prefs.setString('username', userModel.username);
+    await prefs.setString('email', userModel.email);
+    await prefs.setString('fullName', userModel.fullName);
+    await prefs.setString('address', userModel.address);
+    await prefs.setString('phoneNumber', userModel.phoneNumber);
+    await prefs.setString('imgUrl', userModel.imgUrl);
+    await prefs.setString('createdAt', userModel.createdAt.toIso8601String());
+    await prefs.setBool('isBlock', userModel.isBlock??false);
+    await prefs.setInt('score', userModel.score??0);
+    log('User saved to prefs: ${userModel.toString()}');
+  }
 
   Future<void> _saveUserDetails() async {
     if (_formKey.currentState!.validate()) {
@@ -99,11 +111,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
           email: widget.email,
           address: _placeController.text.trim(),
           phoneNumber: _phoneNumberController.text.trim(),
-          imgUrl: _uploadedImageUrl!
+          imgUrl: _uploadedImageUrl!,
+          createdAt: DateTime.now()
         );
 
         await _firestore.collection('users').doc(widget.uid).set(userModel.toMap());
-        
+        await saveUserToPrefs(userModel);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -167,8 +180,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child:
-                              image != null
-                                  ? Image.file(File(image!.path,),fit: BoxFit.fill,)
+                              _uploadedImageUrl != null
+                                  ? Image.network(_uploadedImageUrl!)
                                   : Icon(Icons.image),
                         ),
                       ),
