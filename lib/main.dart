@@ -2,20 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libro/features/auth/auth_service.dart';
-import 'package:libro/features/data/models/check.dart';
 import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
 import 'package:libro/features/presentation/bloc/book/books_event.dart';
 import 'package:libro/features/presentation/bloc/login/login_bloc.dart';
-import 'package:libro/features/presentation/screens/bottom_navigation.dart';
-import 'package:libro/features/presentation/screens/check.dart';
-import 'package:libro/features/presentation/screens/home_screen.dart';
-import 'package:libro/features/presentation/screens/login_screen.dart';
 import 'package:libro/features/presentation/bloc/signup/signup_bloc.dart';
-import 'package:libro/features/presentation/screens/signup_screen.dart';
 import 'package:libro/features/presentation/screens/splash_screen.dart';
 import 'package:libro/firebase_options.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 void main() async {

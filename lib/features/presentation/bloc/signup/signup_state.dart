@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:libro/features/presentation/screens/user.dart';
 
 abstract class SignupState extends Equatable {
   @override

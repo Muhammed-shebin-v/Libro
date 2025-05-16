@@ -8,14 +8,14 @@ class CustomForm extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
-   bool obsecure;
-   CustomForm({
+   final bool obsecure;
+   const CustomForm({
     super.key,
     required this.title,
     required this.controller,
     required this.validator,
     required this.hint,
-    this.obsecure=false,
+    this.obsecure = false,
     this.suffixIcon
   });
 
