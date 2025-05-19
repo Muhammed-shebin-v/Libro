@@ -1,4 +1,5 @@
 class BookModel {
+  final String? uid;
   final String bookName;
   final String bookId;
   final String authorName;
@@ -7,6 +8,7 @@ class BookModel {
   final String pages;
   final String stocks;
   final String location;
+  final List<String> imageUrls;
 
   BookModel({
     required this.bookName,
@@ -17,10 +19,13 @@ class BookModel {
     required this.pages,
     required this.stocks,
     required this.location,
+    required this.imageUrls,
+    this.uid,
   });
 
   factory BookModel.fromMap(Map<String, dynamic> data) {
     return BookModel(
+      uid: data['uid']??'',
       bookName: data['bookname'] ?? '',
       bookId: data['bookId'] ?? '',
       authorName: data['authorName'] ?? '',
@@ -29,6 +34,7 @@ class BookModel {
       pages: data['pages'] ?? 0,
       stocks: data['stocks'] ?? 0,
       location: data['location'] ?? '',
+      imageUrls: List<String>.from(data['imageUrls'] ?? []),
     );
   }
 
@@ -42,6 +48,7 @@ class BookModel {
       'pages': pages,
       'stocks': stocks,
       'location': location,
+      'imageUrls': imageUrls,
     };
   }
 }

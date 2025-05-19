@@ -11,7 +11,7 @@ class UserModel {
   final String address;
   final String phoneNumber;
   final String imgUrl;
-  final DateTime createdAt;
+  final String createdAt;
   final bool? isBlock;
   final int? score;
 
@@ -55,7 +55,7 @@ class UserModel {
       address: data['address'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
       imgUrl: data['imgUrl']??'',
-      createdAt: data['createdAt']?? '',
+      createdAt:data['date']?.toDate().toString() ?? '',
       isBlock: data['isBlock'] ?? false,
       score: data['score'] ?? 0,
     );

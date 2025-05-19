@@ -32,10 +32,10 @@ class AuthService {
       await prefs.setString('email', user.email);
       await prefs.setString('phone', user.phoneNumber);
       await prefs.setString('address', user.address);
-      await prefs.setString('image', user.imgUrl);
-      await prefs.setString('createdDate', user.createdAt.toIso8601String());
+      await prefs.setString('imgUrl', user.imgUrl);
+      await prefs.setString('createdDate', user.createdAt);
       await prefs.setBool('isBlock', user.isBlock!);
-
+      await prefs.setInt('score', user.score!);
       log('User data: ${user.toString()}');
     } else {
       throw Exception("User data not found.");

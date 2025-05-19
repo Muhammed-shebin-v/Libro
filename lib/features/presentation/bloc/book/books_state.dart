@@ -15,3 +15,5 @@ class BookError extends BookState {
   final String message;
   BookError(this.message);
 }
+
+class BookUploaded extends BookState {}

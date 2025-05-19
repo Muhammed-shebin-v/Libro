@@ -31,9 +31,7 @@ class HomeScreen extends StatelessWidget {
       phoneNumber: prefs.getString('phone') ?? '',
       address: prefs.getString('address') ?? '',
       imgUrl: prefs.getString('image') ?? '',
-      createdAt: DateTime.parse(
-        prefs.getString('createdDate') ?? DateTime.now().toIso8601String(),
-      ),
+      createdAt: prefs.getString('createdDate') ?? '',
     );
   }
 

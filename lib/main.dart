@@ -6,6 +6,7 @@ import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
 import 'package:libro/features/presentation/bloc/book/books_event.dart';
 import 'package:libro/features/presentation/bloc/login/login_bloc.dart';
 import 'package:libro/features/presentation/bloc/signup/signup_bloc.dart';
+import 'package:libro/features/presentation/screens/flip_book.dart';
 import 'package:libro/features/presentation/screens/splash_screen.dart';
 import 'package:libro/firebase_options.dart';
 
@@ -25,13 +26,16 @@ class Libro extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => SignupBloc(AuthService())),
         BlocProvider(create: (context) => LoginBloc(AuthService())),
-        BlocProvider(create: (context)=>BookBloc()..add(FetchBooks()),)
+        BlocProvider(create: (context)=>BookBloc()..add(FetchBooks()),),
+        BlocProvider(create: (context) => CarouselBloc(
+          totalPages: 5, // Set the total number of pages here
+        )),
       ],
       child: MaterialApp(
         title: 'Libro',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: SplashScreen(),
+        home: MyHomePage(),
       ),
     );
   }

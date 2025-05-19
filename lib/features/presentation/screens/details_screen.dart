@@ -91,7 +91,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     await prefs.setString('address', userModel.address);
     await prefs.setString('phoneNumber', userModel.phoneNumber);
     await prefs.setString('imgUrl', userModel.imgUrl);
-    await prefs.setString('createdAt', userModel.createdAt.toIso8601String());
+    await prefs.setString('createdAt', userModel.createdAt);
     await prefs.setBool('isBlock', userModel.isBlock??false);
     await prefs.setInt('score', userModel.score??0);
     log('User saved to prefs: ${userModel.toString()}');
@@ -112,7 +112,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           address: _placeController.text.trim(),
           phoneNumber: _phoneNumberController.text.trim(),
           imgUrl: _uploadedImageUrl!,
-          createdAt: DateTime.now()
+          createdAt: DateTime.now().toString()
         );
 
         await _firestore.collection('users').doc(widget.uid).set(userModel.toMap());

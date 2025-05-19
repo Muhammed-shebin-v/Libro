@@ -29,9 +29,8 @@ class User extends StatelessWidget {
       phoneNumber: prefs.getString('phone') ?? '',
       address: prefs.getString('address') ?? '',
       imgUrl: prefs.getString('imgUrl') ?? '',
-      createdAt: DateTime.parse(
-        prefs.getString('createdDate') ?? DateTime.now().toIso8601String(),
-      ),
+      createdAt: prefs.getString('createdAt') ?? '',
+      score: prefs.getInt('score') ?? 0,
     );
   }
 
