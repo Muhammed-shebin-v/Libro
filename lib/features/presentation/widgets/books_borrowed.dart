@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/data/models/book.dart';
+import 'package:libro/features/domain/repository/borrow.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
-import 'package:libro/features/presentation/widgets/large_book.dart';
 
-class Boook extends StatefulWidget {
-  const Boook({super.key});
+
+class BookInfoBorrowed extends StatefulWidget {
+  final BookModel  book;
+  final String userid;
+  const BookInfoBorrowed({super.key,required this.book,required this.userid});
 
   @override
-  State<Boook> createState() => _BoookState();
+  State<BookInfoBorrowed> createState() => _BoookState();
 }
 
-class _BoookState extends State<Boook> {
+class _BoookState extends State<BookInfoBorrowed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +25,13 @@ class _BoookState extends State<Boook> {
       appBar: AppBar(
         backgroundColor: AppColors.color60,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_outlined)),
+          IconButton(onPressed: () {
+            BorrowService().borrowBook(
+              userId: widget.userid,
+              bookId: widget.book.uid!,
+              context: context,
+            );
+          }, icon: Icon(Icons.shopping_bag)),
         ],
       ),
       body: SingleChildScrollView(
@@ -57,7 +67,12 @@ class _BoookState extends State<Boook> {
                                   onPressed: () {},
                                   icon: Icon(
                                     Icons.bookmark,
-                                    color: AppColors.color10,
+                                    color: const Color.fromARGB(
+                                      255,
+                                      255,
+                                      136,
+                                      0,
+                                    ),
                                     size: 35,
                                   ),
                                 ),
@@ -70,10 +85,10 @@ class _BoookState extends State<Boook> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'The Way of the Nameless',
+                                    widget.book.bookName,
                                     style: AppFonts.body1,
                                   ),
-                                  Text('Graham Douglass'),
+                                  Text(widget.book.authorName,),
                                   CustomContainer(
                                     color: AppColors.color60,
                                     radius: BorderRadius.circular(25),
@@ -112,7 +127,7 @@ class _BoookState extends State<Boook> {
                                                 ),
                                               ],
                                             ),
-                                            Text('196 pages • Fictional'),
+                                            Text('${widget.book.pages} • ${widget.book.category}'),
                                           ],
                                         ),
                                         VerticalDivider(color: Colors.black),
@@ -125,7 +140,7 @@ class _BoookState extends State<Boook> {
                                   ),
                                   Gap(20),
                                   Text(
-                                    'Atomic Habits"by James Clear is a transformative guide on building good habits and breaking bad ones. It explores how small, consistent changes lead to remarkable results over time. Using science-backed strategies, Clear explains the power of habit formation.',
+                                    widget.book.description,
                                     style: GoogleFonts.k2d(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
@@ -137,7 +152,7 @@ class _BoookState extends State<Boook> {
                                     child: Row(
                                       children: [
                                         Icon(Icons.location_pin),
-                                        Text('1st floor,1A shelf,4th row'),
+                                        Text(widget.book.location),
                                       ],
                                     ),
                                   ),
@@ -148,13 +163,35 @@ class _BoookState extends State<Boook> {
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment(-0.05, -0.95),
-                      child: BookLarge(
-                        image: 'lib/assets/images.jpeg',
-                        color: AppColors.grey,
-                      ),
-                    ),
+                    SizedBox(
+                          height: 200,
+                          child:
+                             ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: widget.book.imageUrls.length,
+                                    itemBuilder: (context, index) {
+                                      final selectedImage =
+                                          widget.book.imageUrls[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          width: 110,
+                                          height: 140,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                          child: Image.network(
+                                            selectedImage,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                        ),
                     Positioned(
                       top: 580,
                       right: 0,
@@ -251,6 +288,7 @@ class _BoookState extends State<Boook> {
                                 images: images,
                                 authors: authors,
                                 gonores: gonores,
+                                // colors: colors,
                               ),
                             ],
                           ),

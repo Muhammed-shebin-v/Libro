@@ -25,6 +25,7 @@ class BorrowService {
       final bool isBlocked = userData['isBlock'] ?? false;
 
       if (isBlocked) {
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("You are blocked from borrowing books")),
         );
@@ -35,17 +36,15 @@ class BorrowService {
       final returnDate = borrowDate.add(Duration(days: 10));
       final fine = 0;
       final borrowId = _firestore.collection('borrows').doc().id;
-      log("Borrow ID: $borrowId");
       final borrowData = {
         'userId': userId,
         'bookId': bookId,
-        'borrowDate': borrowDate,
-        'returnDate': returnDate,
+        'borrowDate': borrowDate.toIso8601String(),
+        'returnDate': returnDate.toIso8601String(),
         'fine': fine,
       };
 
       WriteBatch batch = _firestore.batch();
-      log("Batch created");
       final userBorrowRef = _firestore
           .collection('users')
           .doc(userId)
@@ -53,7 +52,6 @@ class BorrowService {
           .doc(borrowId);
       batch.set(userBorrowRef, {'borrowId': borrowId});
 
-      log("User borrow reference: $userBorrowRef");
       final mainBorrowRef = _firestore.collection('borrows').doc(borrowId);
       batch.set(mainBorrowRef, borrowData);
       final bookBorrowRef = _firestore
@@ -62,7 +60,7 @@ class BorrowService {
           .collection('borrows')
           .doc(borrowId);
       batch.set(bookBorrowRef, {'borrowId': borrowId});
-      log("Main borrow reference: $mainBorrowRef");
+
       final newScore = (userData['score'] ?? 0) + 100;
       final userRef = _firestore.collection('users').doc(userId);
       batch.update(userRef, {'score': newScore});

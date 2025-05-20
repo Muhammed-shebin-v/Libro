@@ -12,3 +12,12 @@ class UploadBookEvent extends BookEvent {
   final String title;
   UploadBookEvent(this.title);
 }
+
+class SearchBooks extends BookEvent {
+  final String query;
+  SearchBooks(this.query);
+}
+
+
+
+

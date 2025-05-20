@@ -17,6 +17,7 @@ class BookBloc extends Bloc<BookEvent, BookState> {
   BookBloc() : super(BookInitial()) {
     on<FetchBooks>(_onFetchBooks);
     on<SelectBook>(_onSelectBook);
+    on<SearchBooks>(_onSearch);
 
   }
 
@@ -38,8 +39,33 @@ class BookBloc extends Bloc<BookEvent, BookState> {
       emit(BookLoaded(current.books, selectedBook: event.book));
     }
   }
+    
+    
+    Future<void> _onSearch(event, emit) async {
+  if (event.query.trim().isEmpty) {
+    emit(BookSearchInitial());
+    return;
+  }
 
-  
+  emit(BookSearchLoading());
+  try {
+    final query = event.query.toLowerCase();
+    final booksSnap = await FirebaseFirestore.instance.collection('books').get();
+
+    final results = booksSnap.docs
+        .map((doc) => BookModel.fromMap(doc.data()))
+        .where((book) =>
+            book.bookName.toLowerCase().contains(query)||book.authorName.toLowerCase().contains(query)).toList();
+    
+
+    emit(BookSearchLoaded(results));
+  } catch (e) {
+    emit(BookSearchError('Error searching books: $e'));
+  }
 }
+
+  }
+
+
 
 

@@ -30,12 +30,13 @@ class Libro extends StatelessWidget {
         BlocProvider(create: (context) => CarouselBloc(
           totalPages: 5, // Set the total number of pages here
         )),
+      
       ],
       child: MaterialApp(
         title: 'Libro',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: MyHomePage(),
+        home: SplashScreen(),
       ),
     );
   }

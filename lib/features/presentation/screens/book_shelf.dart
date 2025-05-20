@@ -222,6 +222,7 @@ class Bookshelf extends StatelessWidget {
                               top: 0,
                               left: 30,
                               child: Book(
+                                color: AppColors.color30,
                                 image:
                                     'lib/assets/book-covers-big-2019101610.jpg',
                                 // color: const Color.fromARGB(255, 231, 52, 52),

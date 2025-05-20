@@ -9,8 +9,8 @@ import 'package:libro/features/presentation/widgets/large_book.dart';
 
 
 class BookInfo extends StatefulWidget {
-  final  book;
-  final userid;
+  final   book;
+  final String userid;
   const BookInfo({super.key,required this.book,required this.userid});
 
   @override
@@ -163,13 +163,37 @@ class _BoookState extends State<BookInfo> {
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment(-0.05, -0.95),
-                      child: BookLarge(
-                        image: widget.book['imgUrl'],
-                        color: Color(widget.book['color']),
-                      ),
-                    ),
+                    SizedBox(
+                          height: 200,
+                          child:
+                              widget.book?['imageUrls'] == null
+                                  ? const Text('No images selected.')
+                                  : ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: widget.book?['imageUrls'].length,
+                                    itemBuilder: (context, index) {
+                                      final selectedImage =
+                                          widget.book?['imageUrls'][index];
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          width: 110,
+                                          height: 140,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                          child: Image.network(
+                                            selectedImage,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                        ),
                     Positioned(
                       top: 580,
                       right: 0,

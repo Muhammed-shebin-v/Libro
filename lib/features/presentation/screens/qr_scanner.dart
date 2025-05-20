@@ -50,6 +50,7 @@ class QrScanner extends StatelessWidget {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.25,
                               child: Book(
+                                color: AppColors.color30,
                                 image: 'lib/assets/images.jpeg',
                                 
                               ),

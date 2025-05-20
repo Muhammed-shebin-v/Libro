@@ -10,6 +10,7 @@ import 'package:libro/features/presentation/screens/book_info.dart';
 import 'package:libro/features/presentation/screens/qr_scanner.dart';
 import 'package:libro/features/presentation/screens/score_screen.dart';
 import 'package:libro/features/presentation/widgets/book.dart';
+import 'package:libro/features/presentation/widgets/books_borrowed.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/custom_ad.dart';
 import 'package:libro/features/presentation/widgets/search_bar.dart';
@@ -109,6 +110,72 @@ class HomeScreen extends StatelessWidget {
                         ),
                         Gap(20),
                         CustomSearchBar(),
+                        BlocBuilder<BookBloc, BookState>(
+                          builder: (context, state) {
+                            if (state is BookSearchLoading) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (state is BookSearchLoaded) {
+                              final books = state.results;
+                              if (books.isEmpty) {
+                                return const Center(
+                                  child: Text('No books found.'),
+                                );
+                              }
+                              return SizedBox(
+                                height: 300,
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) => const Divider(),
+                                  itemCount: books.length,
+                                  itemBuilder: (context, index) {
+                                    final book = books[index];
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 5,
+                                      ),    
+                                      child: InkWell(
+                                         onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => BookInfoBorrowed(book: book,userid: book.uid!,),
+                                ),
+                              );
+                            },
+                                        child: Row(
+                                          children: [
+                                            Image.network(
+                                              book.imageUrls[0],
+                                              width: 50,
+                                              height: 70,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (_, __, ___) =>
+                                                      const Icon(Icons.book),
+                                            ),
+                                            Gap(20),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(book.bookName),
+                                                Text(book.authorName),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            } else if (state is BookSearchError) {
+                              return Center(child: Text(state.message));
+                            }
+                            return const SizedBox();
+                          },
+                        ),
                         Gap(40),
                         SizedBox(
                           height: 100,
@@ -239,8 +306,9 @@ class HomeScreen extends StatelessWidget {
                                                               (
                                                                 context,
                                                               ) => BookInfo(
-                                                                userid: userData
-                                                                    .uid,
+                                                                userid:
+                                                                    userData
+                                                                        .uid,
                                                                 book:
                                                                     book[index],
                                                               ),
@@ -253,8 +321,11 @@ class HomeScreen extends StatelessWidget {
                                                               .start,
                                                       children: [
                                                         Book(
+                                                          color: Color(
+                                                            book[index]['color'],
+                                                          ),
                                                           image:
-                                                              book[index]['imgUrl'],
+                                                              book[index]['imageUrls'][0],
                                                         ),
                                                         Gap(5),
                                                         SizedBox(

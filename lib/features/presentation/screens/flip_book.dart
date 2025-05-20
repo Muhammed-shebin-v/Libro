@@ -176,7 +176,8 @@ class _CarouselWidgetState extends State<CarouselWidget> {
 
 
 
-class MyHomePage extends StatelessWidget {
+class CustomCarousal extends StatelessWidget {
+  const CustomCarousal({super.key});
   @override
   Widget build(BuildContext context) {
     // Example items for the carousel
