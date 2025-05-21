@@ -4,6 +4,9 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/data/models/user_model.dart';
+import 'package:libro/features/presentation/bloc/bloc/search_dart_bloc.dart';
+import 'package:libro/features/presentation/bloc/bloc/search_dart_event.dart';
+import 'package:libro/features/presentation/bloc/bloc/search_dart_state.dart';
 import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
 import 'package:libro/features/presentation/bloc/book/books_state.dart';
 import 'package:libro/features/presentation/screens/book_info.dart';
@@ -39,9 +42,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF4DC),
+      backgroundColor: AppColors.color60,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFDF4DC),
+        backgroundColor: AppColors.color60,
         // leading: Image(image: AssetImage('lib/assets/IMG_0899 3.JPG')),
         automaticallyImplyLeading: false,
         title: Text(
@@ -109,14 +112,16 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                         Gap(20),
+
                         CustomSearchBar(),
-                        BlocBuilder<BookBloc, BookState>(
+
+                        BlocBuilder<SearchBloc, SearchState>(
                           builder: (context, state) {
-                            if (state is BookSearchLoading) {
+                            if (state is SearchLoading) {
                               return const Center(
                                 child: CircularProgressIndicator(),
                               );
-                            } else if (state is BookSearchLoaded) {
+                            } else if (state is SearchLoaded) {
                               final books = state.results;
                               if (books.isEmpty) {
                                 return const Center(
@@ -124,9 +129,10 @@ class HomeScreen extends StatelessWidget {
                                 );
                               }
                               return SizedBox(
-                                height: 300,
                                 child: ListView.separated(
-                                  separatorBuilder: (context, index) => const Divider(),
+                                  shrinkWrap: true,
+                                  separatorBuilder:
+                                      (context, index) => const Divider(),
                                   itemCount: books.length,
                                   itemBuilder: (context, index) {
                                     final book = books[index];
@@ -134,16 +140,20 @@ class HomeScreen extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 10,
                                         vertical: 5,
-                                      ),    
+                                      ),
                                       child: InkWell(
-                                         onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BookInfoBorrowed(book: book,userid: book.uid!,),
-                                ),
-                              );
-                            },
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (_) => BookBorrowedInfo(
+                                                    book: book,
+                                                    userid: book.uid!,
+                                                  ),
+                                            ),
+                                          );
+                                        },
                                         child: Row(
                                           children: [
                                             Image.network(
@@ -157,7 +167,8 @@ class HomeScreen extends StatelessWidget {
                                             ),
                                             Gap(20),
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(book.bookName),
                                                 Text(book.authorName),
@@ -170,7 +181,7 @@ class HomeScreen extends StatelessWidget {
                                   },
                                 ),
                               );
-                            } else if (state is BookSearchError) {
+                            } else if (state is SearchError) {
                               return Center(child: Text(state.message));
                             }
                             return const SizedBox();
@@ -191,7 +202,7 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                     child: Image(
                                       fit: BoxFit.fill,
-                                      image: AssetImage(images[index]),
+                                      image: AssetImage(imagescat[index]),
                                       width: 50,
                                       height: 70,
                                     ),
@@ -221,7 +232,7 @@ class HomeScreen extends StatelessWidget {
                             height: 850,
                             width: MediaQuery.of(context).size.width * 0.95,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFEDAA1),
+                              color: AppColors.color30,
                               border: Border.all(),
                               borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(25),
@@ -229,7 +240,7 @@ class HomeScreen extends StatelessWidget {
                               boxShadow: [
                                 BoxShadow(
                                   offset: Offset(4, 4),
-                                  color: Colors.grey,
+                                  color: AppColors.grey
                                 ),
                               ],
                             ),
@@ -251,7 +262,7 @@ class HomeScreen extends StatelessWidget {
                             height: 550,
                             width: MediaQuery.of(context).size.width * 0.95,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFDF4DC),
+                              color: AppColors.color60,
                               border: Border.all(),
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(25),
@@ -259,7 +270,7 @@ class HomeScreen extends StatelessWidget {
                               boxShadow: [
                                 BoxShadow(
                                   offset: Offset(-4, 4),
-                                  color: Colors.grey,
+                                  color: AppColors.grey,
                                 ),
                               ],
                             ),
@@ -426,12 +437,20 @@ class HomeScreen extends StatelessWidget {
     'The Way of the Nameless',
   ];
 
-  final List<String> images = [
+  final List<String> imagescat = [
     'lib/assets/images.png',
     'lib/assets/book-covers-big-2019101610.jpg',
     'lib/assets/images.jpeg',
     'lib/assets/71ng-giA8bL._AC_UF1000,1000_QL80_.jpg',
     'lib/assets/teal-and-orange-fantasy-book-cover-design-template-056106feb952bdfb7bfd16b4f9325c11.jpg',
+  ];
+
+  final List<String> images = [
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
   ];
 
   final List<String> authors = [

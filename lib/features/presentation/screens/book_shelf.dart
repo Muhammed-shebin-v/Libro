@@ -55,7 +55,7 @@ class Bookshelf extends StatelessWidget {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 0, 0, 0),
+                    color: AppColors.color10,
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: [
                       BoxShadow(
@@ -70,7 +70,7 @@ class Bookshelf extends StatelessWidget {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: AppColors.color30,
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: [
                       BoxShadow(
@@ -89,8 +89,8 @@ class Bookshelf extends StatelessWidget {
                       color: AppColors.color30,
                       radius: BorderRadius.circular(25),
                       shadow: 3,
-                      height: MediaQuery.of(context).size.width * 0.45,
-                      width: MediaQuery.of(context).size.width * 0.45,
+                      height: MediaQuery.of(context).size.width * 0.43,
+                      width: MediaQuery.of(context).size.width * 0.43,
                       child: Padding(
                         padding: EdgeInsets.all(10),
                         child: Column(
@@ -102,9 +102,9 @@ class Bookshelf extends StatelessWidget {
                               children: [
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.width * 0.40,
+                                      MediaQuery.of(context).size.width * 0.30,
                                   width:
-                                      MediaQuery.of(context).size.width * 0.40,
+                                      MediaQuery.of(context).size.width * 0.30,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 10,
                                     value: 0.3,
@@ -122,8 +122,8 @@ class Bookshelf extends StatelessWidget {
                       color: AppColors.color30,
                       radius: BorderRadius.circular(25),
                       shadow: 3,
-                      height: MediaQuery.of(context).size.width * 0.45,
-                      width: MediaQuery.of(context).size.width * 0.45,
+                      height: MediaQuery.of(context).size.width * 0.43,
+                      width: MediaQuery.of(context).size.width * 0.43,
                       child: Padding(
                         padding: EdgeInsets.all(10),
                         child: Column(
@@ -135,9 +135,9 @@ class Bookshelf extends StatelessWidget {
                               children: [
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.width * 0.40,
+                                      MediaQuery.of(context).size.width * 0.30,
                                   width:
-                                      MediaQuery.of(context).size.width * 0.40,
+                                      MediaQuery.of(context).size.width * 0.30,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 10,
                                     value: 0.3,
@@ -224,7 +224,10 @@ class Bookshelf extends StatelessWidget {
                               child: Book(
                                 color: AppColors.color30,
                                 image:
-                                    'lib/assets/book-covers-big-2019101610.jpg',
+                                    
+ 
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+   
                                 // color: const Color.fromARGB(255, 231, 52, 52),
                               ),
                             ),
@@ -257,12 +260,13 @@ class Bookshelf extends StatelessWidget {
     'The Graphic Design Bible',
     'The Way of the Nameless',
   ];
+
   final List<String> images = [
-    'lib/assets/images.png',
-    'lib/assets/book-covers-big-2019101610.jpg',
-    'lib/assets/images.jpeg',
-    'lib/assets/71ng-giA8bL._AC_UF1000,1000_QL80_.jpg',
-    'lib/assets/teal-and-orange-fantasy-book-cover-design-template-056106feb952bdfb7bfd16b4f9325c11.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',  
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
   ];
   final List<String> authors = [
     'Bebble Benze',

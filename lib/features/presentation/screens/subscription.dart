@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:libro/features/presentation/screens/bottom_navigation.dart';
+import 'package:libro/features/presentation/widgets/bottom_navigation.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
 import 'package:libro/features/presentation/widgets/long_button.dart';

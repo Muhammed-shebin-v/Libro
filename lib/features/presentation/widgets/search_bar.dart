@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:libro/features/presentation/bloc/bloc/search_dart_bloc.dart';
+import 'package:libro/features/presentation/bloc/bloc/search_dart_event.dart';
 import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
 import 'package:libro/features/presentation/bloc/book/books_event.dart';
 
 class CustomSearchBar extends StatelessWidget {
-  const CustomSearchBar({super.key});
+   const CustomSearchBar({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +35,9 @@ class CustomSearchBar extends StatelessWidget {
         leading: Icon(Icons.search),
         padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 15)),
         trailing: [Icon(Icons.filter_list)],
-        onChanged: (query) {
-                  context.read<BookBloc>().add(SearchBooks(query));
-                },
+        onChanged: (query){
+          context.read<SearchBloc>().add(SearchBooks(query));
+        }
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:libro/features/presentation/screens/bottom_navigation.dart';
+import 'package:libro/features/presentation/widgets/bottom_navigation.dart';
 import 'package:libro/features/presentation/screens/onboarding_screen.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:lottie/lottie.dart';

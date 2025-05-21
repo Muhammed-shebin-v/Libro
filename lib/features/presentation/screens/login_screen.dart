@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/features/presentation/bloc/login/login_bloc.dart';
-import 'package:libro/features/presentation/screens/bottom_navigation.dart';
+import 'package:libro/features/presentation/widgets/bottom_navigation.dart';
 import 'package:libro/features/presentation/screens/signup_screen.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/widgets/form.dart';

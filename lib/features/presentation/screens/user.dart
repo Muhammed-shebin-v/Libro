@@ -260,7 +260,7 @@ class User extends StatelessWidget {
                                                             builder:
                                                                 (
                                                                   context,
-                                                                ) => BookInfoBorrowed(
+                                                                ) => BookBorrowedInfo(
                                                                   userid:
                                                                       userData
                                                                           .uid,
@@ -412,12 +412,13 @@ class User extends StatelessWidget {
     'The Graphic Design Bible',
     'The Way of the Nameless',
   ];
+
   final List<String> images = [
-    'lib/assets/images.png',
-    'lib/assets/book-covers-big-2019101610.jpg',
-    'lib/assets/images.jpeg',
-    'lib/assets/71ng-giA8bL._AC_UF1000,1000_QL80_.jpg',
-    'lib/assets/teal-and-orange-fantasy-book-cover-design-template-056106feb952bdfb7bfd16b4f9325c11.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',  
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
   ];
   final List<String> authors = [
     'Bebble Benze',

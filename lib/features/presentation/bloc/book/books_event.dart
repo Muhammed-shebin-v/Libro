@@ -13,10 +13,7 @@ class UploadBookEvent extends BookEvent {
   UploadBookEvent(this.title);
 }
 
-class SearchBooks extends BookEvent {
-  final String query;
-  SearchBooks(this.query);
-}
+
 
 
 

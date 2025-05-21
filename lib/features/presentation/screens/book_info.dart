@@ -40,7 +40,7 @@ class _BoookState extends State<BookInfo> {
             children: [
               Gap(20),
               SizedBox(
-                height: 1060,
+                height: 980,
                 child: Stack(
                   children: [
                     Positioned(
@@ -52,7 +52,7 @@ class _BoookState extends State<BookInfo> {
                           topRight: Radius.circular(25),
                         ),
                         shadow: 4,
-                        height: 910,
+                        height: 850,
                         width: MediaQuery.of(context).size.width * 0.95,
                         child: Column(
                           children: [
@@ -78,7 +78,6 @@ class _BoookState extends State<BookInfo> {
                                 ),
                               ],
                             ),
-                            Gap(60),
                             Padding(
                               padding: EdgeInsets.all(20),
                               child: Column(
@@ -163,39 +162,38 @@ class _BoookState extends State<BookInfo> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                          height: 200,
-                          child:
-                              widget.book?['imageUrls'] == null
-                                  ? const Text('No images selected.')
-                                  : ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: widget.book?['imageUrls'].length,
-                                    itemBuilder: (context, index) {
-                                      final selectedImage =
-                                          widget.book?['imageUrls'][index];
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          width: 110,
-                                          height: 140,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(),
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
-                                          child: Image.network(
-                                            selectedImage,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                        ),
+                   SizedBox(
+  height: 220,
+  child: widget.book?['imageUrls'] == null
+      ? const Center(child: Text('No images.'))
+      : PageView.builder(
+          itemCount: widget.book!['imageUrls'].length,
+          controller: PageController(viewportFraction: 0.8),
+          itemBuilder: (context, index) {
+            final selectedImage = widget.book!['imageUrls'][index];
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 100.0),
+              child: Container(
+                width: 10,
+                height: 120,
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    selectedImage,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+),
                     Positioned(
-                      top: 580,
+                      top: 480,
                       right: 0,
                       child: CustomContainer(
                         color: AppColors.color60,
@@ -314,12 +312,12 @@ class _BoookState extends State<BookInfo> {
     'The Graphic Design Bible',
     'The Way of the Nameless',
   ];
-  final List<String> images = [
-    'lib/assets/images.png',
-    'lib/assets/book-covers-big-2019101610.jpg',
-    'lib/assets/images.jpeg',
-    'lib/assets/71ng-giA8bL._AC_UF1000,1000_QL80_.jpg',
-    'lib/assets/teal-and-orange-fantasy-book-cover-design-template-056106feb952bdfb7bfd16b4f9325c11.jpg',
+ final List<String> images = [
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',  
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
   ];
   final List<String> authors = [
     'Bebble Benze',
