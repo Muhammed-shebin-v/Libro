@@ -16,12 +16,20 @@ class DetailsScreen extends StatefulWidget {
   final String uid;
   final String email;
   final String username;
+  final TextEditingController? fullNameController;
+  final TextEditingController? phoneNumberController;
+  final TextEditingController? placeController;
+  final String? imgUrl;
 
-  const DetailsScreen({
+   const DetailsScreen({
     super.key,
     required this.uid,
     required this.email,
     required this.username,
+     this.fullNameController,
+     this.phoneNumberController,
+     this.placeController,
+    this.imgUrl,
   });
 
   @override
@@ -148,13 +156,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   @override
   Widget build(BuildContext context) {
     log(widget.uid);
-    return Scaffold(
-      backgroundColor: AppColors.color60,
-      body: SafeArea(
-        child:
-            _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : Padding(
+    return Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Form(
                     key: _formKey,
@@ -167,8 +169,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           style: AppFonts.heading1,
                         ),
                         Text('Enter more details to know more about you'),
-                        Gap(80),
-
+                        Gap(20),
                         Center(
                           child:  InkWell(
                         onTap: () => _pickImage(),
@@ -185,12 +186,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                   : Icon(Icons.image),
                         ),
                       ),
-                        ),
-                           
-                        Gap(80),
+                    ),
+                           Center(child: Text('upload your profile picture',style: TextStyle(fontSize: 12,color:Colors.grey),)),
+                        Gap(20),
                         CustomForm(
                           title: 'Full Name',
-                          hint: 'enter Full Name',
                           controller: _fullNameController,
                           validator: (value) {
                             if (value == null ||
@@ -213,7 +213,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             }
                             return null;
                           },
-                          hint: 'enter phone number',
                         ),
                         CustomForm(
                           title: 'Place',
@@ -227,21 +226,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             }
                             return null;
                           },
-                          hint: 'enter place',
                         ),
-                        Gap(50),
+                        Gap(30),
                         CustomLongButton(
-                          title: 'Next',
+                          title: 'Continue',
                           ontap: () {
                             _saveUserDetails();
                             log('done');
                           },
                         ),
+                        Center(child: Text('dfdfdddfd dfdfdfdfd dfdf',style: TextStyle(fontSize: 12,color: Colors.grey),),)
                       ],
                     ),
                   ),
-                ),
-      ),
     );
   }
 }

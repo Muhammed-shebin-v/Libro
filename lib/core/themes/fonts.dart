@@ -27,5 +27,6 @@ class AppColors{
   static const Color color10 = Color(0xFFFFC869);
   static const Color secondary = Colors.red;
   static const Color grey=Colors.grey;
+  static const Color black = Colors.black;
 }
 

@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/data/models/user_model.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_bloc.dart';
-import 'package:libro/features/presentation/bloc/bloc/search_dart_event.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_state.dart';
 import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
 import 'package:libro/features/presentation/bloc/book/books_state.dart';

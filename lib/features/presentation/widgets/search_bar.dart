@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_bloc.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_event.dart';
-import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
-import 'package:libro/features/presentation/bloc/book/books_event.dart';
 
 class CustomSearchBar extends StatelessWidget {
    const CustomSearchBar({super.key,});

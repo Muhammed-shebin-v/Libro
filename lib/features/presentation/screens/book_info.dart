@@ -5,11 +5,10 @@ import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/domain/repository/borrow.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
-import 'package:libro/features/presentation/widgets/large_book.dart';
 
 
 class BookInfo extends StatefulWidget {
-  final   book;
+  final book;
   final String userid;
   const BookInfo({super.key,required this.book,required this.userid});
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:libro/features/presentation/screens/book_details.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/presentation/screens/qr_scanner.dart';
 import 'package:libro/features/presentation/widgets/book.dart';
 
 class BooksList extends StatelessWidget {
@@ -33,7 +33,7 @@ class BooksList extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: InkWell(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Boook()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>QrScanner()));
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

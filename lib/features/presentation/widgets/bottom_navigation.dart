@@ -6,10 +6,9 @@ import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/bloc/bottom_navigation/bottom_navigtion_bloc.dart';
 import 'package:libro/features/presentation/bloc/bottom_navigation/bottom_navigtion_event.dart';
 import 'package:libro/features/presentation/bloc/bottom_navigation/bottom_navigtion_state.dart';
-import 'package:libro/features/presentation/screens/book_details.dart';
 import 'package:libro/features/presentation/screens/book_shelf.dart';
 import 'package:libro/features/presentation/screens/home_screen.dart';
-import 'package:libro/features/presentation/screens/search_screen.dart';
+import 'package:libro/features/presentation/screens/qr_scanner.dart';
 import 'package:libro/features/presentation/screens/user.dart';
 
 class BottomNavigation extends StatelessWidget {
@@ -19,7 +18,7 @@ class BottomNavigation extends StatelessWidget {
   final List<Widget> _pages = [
     HomeScreen(),
     // SearchScreen(),
-    Boook(),
+    QrScanner(),
     Bookshelf(),
     User(),
 

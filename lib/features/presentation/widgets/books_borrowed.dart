@@ -6,13 +6,11 @@ import 'package:libro/features/data/models/book.dart';
 import 'package:libro/features/domain/repository/borrow.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
-import 'package:libro/features/presentation/widgets/large_book.dart';
-
 
 class BookBorrowedInfo extends StatefulWidget {
-  final BookModel  book;
+  final BookModel book;
   final String userid;
-  const BookBorrowedInfo({super.key,required this.book,required this.userid});
+  const BookBorrowedInfo({super.key, required this.book, required this.userid});
 
   @override
   State<BookBorrowedInfo> createState() => _BoookState();
@@ -26,20 +24,25 @@ class _BoookState extends State<BookBorrowedInfo> {
       appBar: AppBar(
         backgroundColor: AppColors.color60,
         actions: [
-          IconButton(onPressed: () {
-            BorrowService().borrowBook(
-              userId: widget.userid,
-              bookId: widget.book.uid!,
-              context: context,
-            );
-          }, icon: Icon(Icons.shopping_bag)),
+          IconButton(
+            onPressed: () {
+              BorrowService().borrowBook(
+                userId: widget.userid,
+                bookId: widget.book.uid!,
+                context: context,
+              );
+            },
+            icon: Icon(Icons.shopping_bag),
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
             children: [
+
               Gap(20),
+
               SizedBox(
                 height: 980,
                 child: Stack(
@@ -127,7 +130,9 @@ class _BoookState extends State<BookBorrowedInfo> {
                                                 ),
                                               ],
                                             ),
-                                            Text('${widget.book.pages} • ${widget.book.category}'),
+                                            Text(
+                                              '${widget.book.pages} • ${widget.book.category}',
+                                            ),
                                           ],
                                         ),
                                         VerticalDivider(color: Colors.black),
@@ -163,36 +168,36 @@ class _BoookState extends State<BookBorrowedInfo> {
                         ),
                       ),
                     ),
-                   SizedBox(
-  height: 220,
-  child: widget.book.imageUrls == null
-      ? const Center(child: Text('No images.'))
-      : PageView.builder(
-          itemCount: widget.book.imageUrls.length,
-          controller: PageController(viewportFraction: 0.8),
-          itemBuilder: (context, index) {
-            final selectedImage = widget.book.imageUrls[index];
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 100.0),
-              child: Container(
-                width: 10,
-                height: 120,
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    selectedImage,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-),
+                    SizedBox(
+                      height: 220,
+                      child: PageView.builder(
+                        itemCount: widget.book.imageUrls.length,
+                        controller: PageController(viewportFraction: 0.8),
+                        itemBuilder: (context, index) {
+                          final selectedImage = widget.book.imageUrls[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 100.0,
+                            ),
+                            child: Container(
+                              width: 10,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  selectedImage,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                     Positioned(
                       top: 480,
                       right: 0,
@@ -201,7 +206,6 @@ class _BoookState extends State<BookBorrowedInfo> {
                         radius: BorderRadius.only(topLeft: Radius.circular(20)),
                         shadow: -4,
                         width: MediaQuery.of(context).size.width * 0.95,
-
                         child: Padding(
                           padding: EdgeInsets.all(15),
                           child: Column(
@@ -313,9 +317,9 @@ class _BoookState extends State<BookBorrowedInfo> {
     'The Graphic Design Bible',
     'The Way of the Nameless',
   ];
- final List<String> images = [
+  final List<String> images = [
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
-    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',  
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',

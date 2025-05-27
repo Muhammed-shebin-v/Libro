@@ -24,6 +24,12 @@ class BorrowService {
       final userData = userDoc.data()!;
       final bool isBlocked = userData['isBlock'] ?? false;
 
+      // stocks = if(stocs > 0) { true } else { false }
+      // is overdue = if (overdue==false) { true } else { false }
+      // boook = collections(borrows).where(bookid == bookId).&& (usrid ==usreid) ====false
+      // subscription = collection(users).(usrid).(borrowlimit)>0===treu;
+  
+
       if (isBlocked) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -42,6 +48,7 @@ class BorrowService {
         'borrowDate': borrowDate.toIso8601String(),
         'returnDate': returnDate.toIso8601String(),
         'fine': fine,
+        
       };
 
       WriteBatch batch = _firestore.batch();
@@ -59,7 +66,7 @@ class BorrowService {
           .doc(bookId)
           .collection('borrows')
           .doc(borrowId);
-      batch.set(bookBorrowRef, {'borrowId': borrowId});
+          batch.set(bookBorrowRef, {'borrowId': borrowId});
 
       final newScore = (userData['score'] ?? 0) + 100;
       final userRef = _firestore.collection('users').doc(userId);
@@ -74,6 +81,12 @@ class BorrowService {
         backgroundColor: Colors.green,
         ));
       log("Book borrowed successfully");
+
+
+      // user score =userid.score +100;
+      // // stock=bookid.stock -1;
+      // user count =userid.borrowcount -1;
+      // book readers= bookid.readers +1'
     } catch (e) {
       debugPrint("Error borrowing book: $e");
       ScaffoldMessenger.of(

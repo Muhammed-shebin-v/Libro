@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_bloc.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_event.dart';
-import 'package:libro/features/presentation/bloc/bloc/search_dart_state.dart';
-import 'package:libro/features/presentation/widgets/books_borrowed.dart';
 
 class SearchScreen extends StatelessWidget {
    SearchScreen({super.key});

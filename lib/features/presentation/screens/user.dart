@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/features/data/models/user_model.dart';
 import 'package:libro/features/presentation/bloc/bloc/borrowed_dart_bloc.dart';
-import 'package:libro/features/presentation/screens/book_info.dart';
 import 'package:libro/features/presentation/screens/qr_scanner.dart';
 import 'package:libro/features/presentation/screens/settings.dart';
 import 'package:libro/core/themes/fonts.dart';
@@ -202,15 +201,9 @@ class User extends StatelessWidget {
                             child: Column(
                               children: [
                                 BlocProvider(
-                                  create:
-                                      (_) =>
-                                          UserBorrowBloc()..add(
-                                            LoadUserBorrowedBooks(userData.uid),
-                                          ),
-                                  child: BlocBuilder<
-                                    UserBorrowBloc,
-                                    UserBorrowState
-                                  >(
+                                  create:(_) =>
+                                  UserBorrowBloc()..add(LoadUserBorrowedBooks(userData.uid),),
+                                  child: BlocBuilder<UserBorrowBloc, UserBorrowState>(
                                     builder: (context, state) {
                                       if (state is UserBorrowLoading) {
                                         return const Center(
@@ -264,7 +257,8 @@ class User extends StatelessWidget {
                                                                   userid:
                                                                       userData
                                                                           .uid,
-                                                                  book: borrowedbook,
+                                                                  book:
+                                                                      borrowedbook,
                                                                 ),
                                                           ),
                                                         );
@@ -278,8 +272,9 @@ class User extends StatelessWidget {
                                                             color: Color(
                                                               0xFFE8E8E8,
                                                             ),
-                                                            image:borrowedbook.imageUrls[0]
-
+                                                            image:
+                                                                borrowedbook
+                                                                    .imageUrls[0],
                                                           ),
                                                           Gap(5),
                                                           SizedBox(
@@ -415,7 +410,7 @@ class User extends StatelessWidget {
 
   final List<String> images = [
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
-    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',  
+    'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
