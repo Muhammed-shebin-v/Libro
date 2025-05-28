@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:libro/features/data/models/user_model.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/screens/subscription.dart';
+import 'package:libro/features/presentation/widgets/animation.dart';
 import 'package:libro/features/presentation/widgets/form.dart';
 import 'package:libro/features/presentation/widgets/long_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -231,7 +233,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         CustomLongButton(
                           title: 'Continue',
                           ontap: () {
-                            _saveUserDetails();
+                            context.read<OnboardingBloc>().add(NextPageEvent());
+                            // _saveUserDetails();
                             log('done');
                           },
                         ),

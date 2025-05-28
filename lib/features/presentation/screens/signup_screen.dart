@@ -227,10 +227,7 @@ class _SignupScreenState extends State<SignupScreen> {
             Center(
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
+                 context.read<OnboardingBloc>().add(NextPageEvent());
                 },
                 child: Text(
                   'Already have an account? Login',

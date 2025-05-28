@@ -42,7 +42,7 @@ class Libro extends StatelessWidget {
         title: 'Libro',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primarySwatch: Colors.blue),
-        home:  LibroSubscriptionScreen2(),
+        home:  SplashScreen(),
 
       ),
     );
