@@ -1,6 +1,16 @@
+import 'dart:developer';
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:libro/features/data/models/user_model.dart';
+import 'package:libro/features/presentation/screens/qr_scanner.dart';
+import 'package:libro/features/presentation/screens/subscription.dart';
 import 'package:libro/features/presentation/widgets/sub2.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:slide_to_act/slide_to_act.dart';
 
 // BLoC Events
 abstract class OnboardingEvent {}
@@ -55,426 +65,49 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       emit(state.copyWith(currentPage: newPage));
     }
   }
-
-  @override
-  Future<void> close() {
-    state.pageController.dispose();
-    return super.close();
-  }
 }
 
-// Main Screen
-class OnboardingScreen extends StatefulWidget {
-  @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF2D2D2D),
-      body: BlocBuilder<OnboardingBloc, OnboardingState>(
-        builder: (context, state) {
-          return Stack(
-            children: [
-              // Animated circles
-              // AnimatedCircles(currentPage: state.currentPage),
-
-              // Main content
-              SafeArea(
-                child: PageView(
-                  controller: state.pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    LoginPage(),
-                    CreateAccountPage(),
-                    ProfilePage(),
-                    SubscriptionPage(),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-// // Animated Circles Widget
-// class AnimatedCircles extends StatelessWidget {
-//   final int currentPage;
-
-//   const AnimatedCircles({Key? key, required this.currentPage}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final screenWidth = MediaQuery.of(context).size.width+100;
-//     final screenHeight = MediaQuery.of(context).size.height;
-
-//     // Calculate circle positions based on current page
-//     double topCircleX = _getTopCirclePosition(currentPage, screenWidth);
-//     double bottomCircleX = _getBottomCirclePosition(currentPage, screenWidth);
-
-//     return Stack(
-//       children: [
-//         // Top circle
-//         AnimatedPositioned(
-//           duration: const Duration(milliseconds: 300),
-//           curve: Curves.easeInOut,
-//           top: -40,
-//           left: topCircleX,
-//           child: Container(
-//             width: 180,
-//             height: 180,
-//             decoration: const BoxDecoration(
-//               color: Color(0xFFE6B366),
-//               shape: BoxShape.circle,
-//             ),
-//           ),
-//         ),
-
-//         // Bottom circle
-//         AnimatedPositioned(
-//           duration: const Duration(milliseconds: 300),
-//           curve: Curves.easeInOut,
-//           bottom: -30,
-//           left: bottomCircleX,
-//           child: Container(
-//             width: 300,
-//             height: 200,
-//             decoration: const BoxDecoration(
-//               color: Color(0xFFE6B366),
-//               shape: BoxShape.circle,
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-
-//   double _getTopCirclePosition(int page, double screenWidth) {
-//     switch (page) {
-//       case 0:
-//         return screenWidth * 0.6;
-//       case 1:
-//         return screenWidth * 0.4;
-//       case 2:
-//         return screenWidth * 0.2;
-//       case 3:
-//         return screenWidth * 0.0;
-//       default:
-//         return screenWidth * 0.6;
-//     }
-//   }
-
-//   double _getBottomCirclePosition(int page, double screenWidth) {
-//     switch (page) {
-//       case 0:
-//         return -50;
-//       case 1:
-//         return screenWidth * 0.2;
-//       case 2:
-//         return screenWidth * 0.4;
-//       case 3:
-//         return screenWidth * 0.6;
-//       default:
-//         return -50;
-//     }
-//   }
-// }
-
-// Custom TextField Widget
-class CustomTextField extends StatelessWidget {
-  final String hintText;
-  final bool isPassword;
-
-  const CustomTextField({
-    Key? key,
-    required this.hintText,
-    this.isPassword = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: TextField(
-        obscureText: isPassword,
-        decoration: InputDecoration(
-          hintText: hintText,
-          filled: true,
-          fillColor: const Color(0xFFE6B366),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Custom Button Widget
-class CustomButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onPressed;
-
-  const CustomButton({Key? key, required this.text, required this.onPressed})
-    : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFE6B366),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 15),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Login Page
-class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Hi Welcome Back',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'I\'m happy to see you again in your account',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 40),
-          const CustomTextField(hintText: 'Email'),
-          const CustomTextField(hintText: 'Password', isPassword: true),
-          const SizedBox(height: 20),
-          CustomButton(
-            text: 'LOGIN',
-            onPressed: () {
-             
-            },
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'or sign in with',
-            style: TextStyle(color: Colors.white70),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildSocialIcon('G'),
-              const SizedBox(width: 20),
-              _buildSocialIcon('F'),
-              const SizedBox(width: 20),
-              _buildSocialIcon('A'),
-            ],
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'Don\'t have an account? Create here',
-            style: TextStyle(color: Colors.white70),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSocialIcon(String letter) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-      child: Center(
-        child: Text(
-          letter,
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Create Account Page
-class CreateAccountPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Create Account',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Your journey starts here take the first step into the realm of creativity',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 40),
-          const CustomTextField(hintText: 'Username'),
-          const CustomTextField(hintText: 'Email'),
-          const CustomTextField(hintText: 'Password', isPassword: true),
-          const CustomTextField(hintText: 'Confirm', isPassword: true),
-          const SizedBox(height: 20),
-          CustomButton(
-            text: 'Sign up',
-            onPressed: () {
-              context.read<OnboardingBloc>().add(NextPageEvent());
-            },
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'or sign in with',
-            style: TextStyle(color: Colors.white70),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildSocialIcon('G'),
-              const SizedBox(width: 20),
-              _buildSocialIcon('F'),
-              const SizedBox(width: 20),
-              _buildSocialIcon('A'),
-            ],
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'Do you have a account?Continue here',
-            style: TextStyle(color: Colors.white70),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSocialIcon(String letter) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-      child: Center(
-        child: Text(
-          letter,
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Profile Page
-class ProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Tell Us More About You!',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'I\'m happy to see you sign up in your account',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 40),
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: const Color(0xFFE6B366),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.person, size: 40, color: Colors.black),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'User Profile Image',
-            style: TextStyle(color: Colors.white70, fontSize: 12),
-          ),
-          const SizedBox(height: 30),
-          const CustomTextField(hintText: 'FullName'),
-          const CustomTextField(hintText: 'Phone number'),
-          const CustomTextField(hintText: 'Address'),
-          const SizedBox(height: 20),
-          CustomButton(
-            text: 'Continue',
-            onPressed: () {
-              context.read<OnboardingBloc>().add(NextPageEvent());
-            },
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Close quickly correctly this will take you to connect to admin',
-            style: TextStyle(color: Colors.white70, fontSize: 12),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Subscription Page
 class SubscriptionPage extends StatelessWidget {
-  const SubscriptionPage({super.key});
+  SubscriptionPage({super.key});
+  final GlobalKey<SlideActionState> slidekey = GlobalKey();
+
+  Future<void> _saveUserDetails(context) async {
+    try {
+      final userData = UserModel(
+        uid: userhi.uid,
+
+        username: userhi.username,
+        // fullName: userhi.fullName,
+        email: userhi.email,
+        place: userhi.place,
+        phoneNumber: userhi.phoneNumber,
+        imgUrl: userhi.imgUrl,
+        // createdAt: DateTime.now().toString(),
+      );
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userData.uid)
+          .set(userData.toMap());
+      await saveUserToPrefs(uid: userData.uid!,username: userData.username!,imgUrl: userData.imgUrl!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Registration complete!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Subscription()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving details: ${e.toString()}')),
+      );
+
+      // }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -504,7 +137,7 @@ class SubscriptionPage extends StatelessWidget {
           ),
 
           //make all these two custom widgets
-          const SizedBox(height: 30),
+          Gap(30),
           BlocBuilder<SubscriptionCubit, String>(
             builder: (context, selectedPlan) {
               return Column(
@@ -540,37 +173,12 @@ class SubscriptionPage extends StatelessWidget {
           ),
 
           // Slide to confirm button
-          Center(
-            child: Container(
-              width: 280,
-              height: 56,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFB347),
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 0,
-                    offset: const Offset(3, 3),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.arrow_forward, color: Colors.black, size: 20),
-                  const SizedBox(width: 12),
-                  Text(
-                    'Slide to Confirm',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          //  SlideWidget(slideKey: slidekey, title: 'Slide to confirm',function:fun(),)
+          IconButton(
+            onPressed: () {
+              _saveUserDetails(context);
+            },
+            icon: Icon(Icons.add),
           ),
         ],
       ),
@@ -589,6 +197,7 @@ class SubscriptionPage extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.read<SubscriptionCubit>().selectPlan(value);
+        // subType=selectedplan;
       },
       child: Container(
         width: double.infinity,
@@ -655,3 +264,12 @@ class SubscriptionPage extends StatelessWidget {
     );
   }
 }
+
+
+ Future<void> saveUserToPrefs({required String uid,required String username,required String imgUrl}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('uid', uid);
+    await prefs.setString('username', username);
+    await prefs.setString('imgUrl',imgUrl);
+    log('User saved to prefs: $uid');
+  }

@@ -1,24 +1,32 @@
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/data/models/user_model.dart';
 import 'package:libro/features/presentation/screens/details_screen.dart';
 import 'package:libro/features/presentation/screens/login_screen.dart';
 import 'package:libro/features/presentation/screens/signup_screen.dart';
 import 'package:libro/features/presentation/widgets/animation.dart';
+
+UserModel userhi=UserModel();
 
 class LibroSubscriptionScreen2 extends StatelessWidget {
   LibroSubscriptionScreen2({super.key});
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
-  final TextEditingController confirmPasswordController =TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final String uid = '';
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController placeController = TextEditingController();
   final String imgUrl = '';
+  final String subscription = '';
+
+  UserModel addUserDetails=UserModel();
 
   @override
   Widget build(BuildContext context) {
@@ -64,26 +72,41 @@ class LibroSubscriptionScreen2 extends StatelessWidget {
                         BlocBuilder<OnboardingBloc, OnboardingState>(
                           builder: (context, state) {
                             return SizedBox(
-                              height: MediaQuery.of(context).size.height-300,
+                              height: MediaQuery.of(context).size.height - 300,
                               child: PageView(
                                 controller: state.pageController,
                                 physics: const NeverScrollableScrollPhysics(),
                                 children: [
                                   LoginScreen(),
                                   SignupScreen(
-                                    uid: uid,
-                                    emailController: emailController,
-                                    passwordController: passwordController,
-                                    usernameController: usernameController,
-                                    confirmPasswordController:
-                                        confirmPasswordController,
+                                  //   // uid: uid!,
+                                  //   // emailController: emailController,
+                                  //   // passwordController: passwordController,
+                                  //   // usernameController: usernameController,
+                                  //   // confirmPasswordController:confirmPasswordController,
+                                  // user: addUserDetails,
                                   ),
                                   DetailsScreen(
-                                    uid: uid,
-                                    email: emailController.text,
-                                    username: usernameController.text,
+                                    // fullNameController: fullNameController,
+                                    // phoneNumberController:
+                                    //     phoneNumberController,
+                                    // placeController: placeController,
+                                    // imgUrl: imgUrl,
+                                    // uid: uid,
+                                    // email: emailController,
+                                    // usertemp: addUserDetails,
                                   ),
-                                  SubscriptionPage(),
+                                  SubscriptionPage(
+                                    // subType: subscription,
+                                    // uid: uid!,
+                                    // username: usernameController,
+                                    // email: emailController,
+                                    // fulname: fullNameController,
+                                    // imageUrl: imgUrl,
+                                    // phone: phoneNumberController,
+                                    // place: placeController,
+                                    // usertemp: addUserDetails,
+                                  ),
                                 ],
                               ),
                             );

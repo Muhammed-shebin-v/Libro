@@ -27,12 +27,12 @@ class User extends StatelessWidget {
       return UserModel(
         uid: uid,
         username: prefs.getString('username') ?? '',
-        fullName: prefs.getString('fullName') ?? '',
+        // fullName: prefs.getString('fullName') ?? '',
         email: prefs.getString('email') ?? '',
         phoneNumber: prefs.getString('phone') ?? '',
-        address: prefs.getString('address') ?? '',
+        place: prefs.getString('address') ?? '',
         imgUrl: prefs.getString('imgUrl') ?? '',
-        createdAt: prefs.getString('createdAt') ?? '',
+        // createdAt: prefs.getString('createdAt') ?? '',
         score: prefs.getInt('score') ?? 0,
       );
     }
@@ -104,7 +104,7 @@ class User extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  userData.imgUrl,
+                                  userData.imgUrl!,
                                   fit: BoxFit.fill,
                                 ),
                               ),
@@ -116,7 +116,7 @@ class User extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    userData.username,
+                                    userData.username!,
                                     style: AppFonts.heading1,
                                   ),
                                   Text(
@@ -201,9 +201,15 @@ class User extends StatelessWidget {
                             child: Column(
                               children: [
                                 BlocProvider(
-                                  create:(_) =>
-                                  UserBorrowBloc()..add(LoadUserBorrowedBooks(userData.uid),),
-                                  child: BlocBuilder<UserBorrowBloc, UserBorrowState>(
+                                  create:
+                                      (_) =>
+                                          UserBorrowBloc()..add(
+                                            LoadUserBorrowedBooks(userData.uid!),
+                                          ),
+                                  child: BlocBuilder<
+                                    UserBorrowBloc,
+                                    UserBorrowState
+                                  >(
                                     builder: (context, state) {
                                       if (state is UserBorrowLoading) {
                                         return const Center(
@@ -256,7 +262,7 @@ class User extends StatelessWidget {
                                                                 ) => BookBorrowedInfo(
                                                                   userid:
                                                                       userData
-                                                                          .uid,
+                                                                          .uid!,
                                                                   book:
                                                                       borrowedbook,
                                                                 ),

@@ -21,26 +21,26 @@ class AuthService {
     }
   }
 
-   fetchUserData(String uid) async {
-    final snapshot = await _firestore.collection('users').doc(uid).get();
-    if (snapshot.exists) {
-      final user = UserModel.fromDocument(snapshot);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('uid', user.uid);
-      await prefs.setString('username', user.username);
-      await prefs.setString('fullName', user.fullName);
-      await prefs.setString('email', user.email);
-      await prefs.setString('phone', user.phoneNumber);
-      await prefs.setString('address', user.address);
-      await prefs.setString('imgUrl', user.imgUrl);
-      await prefs.setString('createdDate', user.createdAt);
-      await prefs.setBool('isBlock', user.isBlock!);
-      await prefs.setInt('score', user.score!);
-      log('User data: ${user.toString()}');
-    } else {
-      throw Exception("User data not found.");
-    }
-  }
+  //  fetchUserData(String uid) async {
+  //   final snapshot = await _firestore.collection('users').doc(uid).get();
+  //   if (snapshot.exists) {
+  //     final user = UserModel.fromDocument(snapshot);
+  //     final prefs = await SharedPreferences.getInstance();
+  //     await prefs.setString('uid', user.uid!);
+  //     await prefs.setString('username', user.username!);
+  //     await prefs.setString('fullName', user.fullName);
+  //     await prefs.setString('email', user.email);
+  //     await prefs.setString('phone', user.phoneNumber);
+  //     await prefs.setString('address', user.address);
+  //     await prefs.setString('imgUrl', user.imgUrl);
+  //     await prefs.setString('createdDate', user.createdAt);
+  //     await prefs.setBool('isBlock', user.isBlock!);
+  //     await prefs.setInt('score', user.score!);
+  //     log('User data: ${user.toString()}');
+  //   } else {
+  //     throw Exception("User data not found.");
+  //   }
+  // }
 
   Future<User?> signIn(String email, String password) async {
     try {

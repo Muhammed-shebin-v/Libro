@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/features/presentation/bloc/login/login_bloc.dart';
+import 'package:libro/features/presentation/bloc/signup/signup_bloc.dart';
 import 'package:libro/features/presentation/widgets/animation.dart';
 import 'package:libro/features/presentation/widgets/bottom_navigation.dart';
 import 'package:libro/core/themes/fonts.dart';

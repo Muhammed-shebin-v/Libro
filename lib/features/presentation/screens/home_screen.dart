@@ -1,27 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/data/models/user_model.dart';
-import 'package:libro/features/presentation/bloc/bloc/search_dart_bloc.dart';
-import 'package:libro/features/presentation/bloc/bloc/search_dart_state.dart';
 import 'package:libro/features/presentation/bloc/book/books_bloc.dart';
 import 'package:libro/features/presentation/bloc/book/books_state.dart';
 import 'package:libro/features/presentation/screens/book_info.dart';
 import 'package:libro/features/presentation/screens/qr_scanner.dart';
 import 'package:libro/features/presentation/screens/score_screen.dart';
 import 'package:libro/features/presentation/widgets/book.dart';
-import 'package:libro/features/presentation/widgets/books_borrowed.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/custom_ad.dart';
-import 'package:libro/features/presentation/widgets/search_bar.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// UserModel? userGlobal;
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-
   Future<UserModel?> getUserFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     final uid = prefs.getString('uid');
@@ -29,12 +27,7 @@ class HomeScreen extends StatelessWidget {
     return UserModel(
       uid: uid,
       username: prefs.getString('username') ?? '',
-      fullName: prefs.getString('fullName') ?? '',
-      email: prefs.getString('email') ?? '',
-      phoneNumber: prefs.getString('phone') ?? '',
-      address: prefs.getString('address') ?? '',
-      imgUrl: prefs.getString('image') ?? '',
-      createdAt: prefs.getString('createdDate') ?? '',
+      imgUrl: prefs.getString('imgUrl') ?? '',
     );
   }
 
@@ -52,27 +45,12 @@ class HomeScreen extends StatelessWidget {
         ),
         leadingWidth: 40,
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => QrScanner()),
-              );
-            },
-            icon: Icon(Icons.qr_code),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ScoreScreen()),
-              );
-            },
-            icon: Icon(Icons.score),
-          ),
+          PushIconButton(nextScreen: QrScanner(), icon: Icon(Icons.qr_code)),
+          PushIconButton(nextScreen: ScoreScreen(), icon: Icon(Icons.score)),
           Gap(10),
         ],
       ),
+
       body: FutureBuilder<UserModel?>(
         future: getUserFromPrefs(),
         builder: (context, snapshot) {
@@ -84,6 +62,7 @@ class HomeScreen extends StatelessWidget {
             return Center(child: Text("No user found"));
           }
           final userData = snapshot.data!;
+          // userGlobal = userData;
           return SingleChildScrollView(
             child: SafeArea(
               child: Column(
@@ -110,115 +89,44 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+
                         Gap(20),
 
-                        CustomSearchBar(),
-
-                        BlocBuilder<SearchBloc, SearchState>(
-                          builder: (context, state) {
-                            if (state is SearchLoading) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else if (state is SearchLoaded) {
-                              final books = state.results;
-                              if (books.isEmpty) {
-                                return const Center(
-                                  child: Text('No books found.'),
-                                );
-                              }
-                              return SizedBox(
-                                child: ListView.separated(
-                                  shrinkWrap: true,
-                                  separatorBuilder:
-                                      (context, index) => const Divider(),
-                                  itemCount: books.length,
-                                  itemBuilder: (context, index) {
-                                    final book = books[index];
-                                    return Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5,
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder:
-                                                  (_) => BookBorrowedInfo(
-                                                    book: book,
-                                                    userid: book.uid!,
-                                                  ),
-                                            ),
-                                          );
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Image.network(
-                                              book.imageUrls[0],
-                                              width: 50,
-                                              height: 70,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (_, __, ___) =>
-                                                      const Icon(Icons.book),
-                                            ),
-                                            Gap(20),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(book.bookName),
-                                                Text(book.authorName),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            } else if (state is SearchError) {
-                              return Center(child: Text(state.message));
-                            }
-                            return const SizedBox();
-                          },
-                        ),
-                        Gap(40),
-                        SizedBox(
-                          height: 100,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: books.length,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0,
-                                    ),
-                                    child: Image(
-                                      fit: BoxFit.fill,
-                                      image: AssetImage(imagescat[index]),
-                                      width: 50,
-                                      height: 70,
-                                    ),
-                                  ),
-                                  Gap(10),
-                                  Text(gonores[index]),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                        Gap(10),
+                        // Gap(40),          
+                        // SizedBox(
+                        //   height: 100,
+                        //   child: ListView.builder(
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: books.length,
+                        //     itemBuilder: (context, index) {
+                        //       return Column(
+                        //         children: [
+                        //           Padding(
+                        //             padding: const EdgeInsets.symmetric(
+                        //               horizontal: 15.0,
+                        //             ),
+                        //             child: Image(
+                        //               fit: BoxFit.fill,
+                        //               image: AssetImage(imagescat[index]),
+                        //               width: 50,
+                        //               height: 70,
+                        //             ),
+                        //           ),
+                        //           Gap(10),
+                        //           Text(gonores[index]),
+                        //         ],
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
+                        // Gap(10),
                         CustomAd(),
+
                         Gap(30),
                       ],
                     ),
                   ),
+
                   SizedBox(
                     height: 850,
                     child: Stack(
@@ -239,10 +147,15 @@ class HomeScreen extends StatelessWidget {
                               boxShadow: [
                                 BoxShadow(
                                   offset: Offset(4, 4),
-                                  color: AppColors.grey
+                                  color: AppColors.grey,
                                 ),
                               ],
                             ),
+
+
+
+
+
                             child: BooksList(
                               title: '  Books of The Week',
                               books: books,
@@ -253,6 +166,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
+
                         Positioned(
                           top: 300,
                           right: 0,
@@ -318,7 +232,7 @@ class HomeScreen extends StatelessWidget {
                                                               ) => BookInfo(
                                                                 userid:
                                                                     userData
-                                                                        .uid,
+                                                                        .uid!,
                                                                 book:
                                                                     book[index],
                                                               ),
@@ -405,6 +319,7 @@ class HomeScreen extends StatelessWidget {
                                     }
                                   },
                                 ),
+
                                 BooksList(
                                   title: '  Most Read',
                                   books: books,
@@ -475,4 +390,27 @@ class HomeScreen extends StatelessWidget {
     const Color.fromARGB(255, 248, 108, 53),
     const Color.fromARGB(255, 216, 112, 181),
   ];
+}
+
+class PushIconButton extends StatelessWidget {
+  final nextScreen;
+  final Icon icon;
+  const PushIconButton({
+    super.key,
+    required this.nextScreen,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return  IconButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => nextScreen),
+        );
+      },
+      icon: icon,
+    );
+  }
 }

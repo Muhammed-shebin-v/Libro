@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/features/presentation/screens/login_screen.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/presentation/widgets/sub2.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class IntroductionPageView extends StatefulWidget {
@@ -131,7 +132,7 @@ class _IntroductionPageViewState extends State<IntroductionPageView> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginScreen(),
+                                builder: (context) => LibroSubscriptionScreen2(),
                               ),
                             );
                           },

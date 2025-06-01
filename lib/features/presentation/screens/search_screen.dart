@@ -1,50 +1,176 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/data/models/user_model.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_bloc.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_event.dart';
+import 'package:libro/features/presentation/bloc/bloc/search_dart_state.dart';
+import 'package:libro/features/presentation/screens/book_info.dart';
+import 'package:libro/features/presentation/screens/home_screen.dart';
+import 'package:libro/features/presentation/widgets/search_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SearchScreen extends StatelessWidget {
-   SearchScreen({super.key});
- final TextEditingController _controller = TextEditingController();
+class SearchScreen extends StatefulWidget {
+  SearchScreen({super.key});
+
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+
+
+  String? _selectedSort;
+   
+
+  final List<String> _sortOptions = ['Alphabetical', 'Latest'];
+
+   Future<UserModel?> getUserFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final uid = prefs.getString('uid');
+    if (uid == null) return null;
+    return UserModel(
+      uid: uid,
+      username: prefs.getString('username') ?? '',
+      imgUrl: prefs.getString('imgUrl') ?? '',
+    );
+  }
+ 
+  @override
+  void initState() async{
+    super.initState();
+userData = await getUserFromPrefs();
+  }
+   UserModel? userData ;
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(
-        title: const Text('Search'),
-        centerTitle: true,
-      ),
-      body: SafeArea(child: 
-      Column(
-        children: [
-          Stack(
+
+   
+    return Scaffold(
+      backgroundColor: AppColors.color60,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Column(
             children: [
-              Column(
-          children: [
-            // Your search bar
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: TextField(
-                controller: _controller,
-                onChanged: (query) {
-                  context.read<SearchBloc>().add(SearchBooks(query));
+            
+                  CustomSearchBar(),
+                  Gap(10),
+
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                     children: [
+                      ElevatedButton.icon(
+                      onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder:
+                        //         (context) => const AllCategoriesScreen(),
+                        //   ),
+                        // );
+                        context.read<SearchBloc>().add(
+                          LoadBooksByCategory('tech'),
+                        );
+                      },
+                      icon: const Icon(Icons.filter_list),
+                      label: const Text('Categories'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey.shade200,
+                        foregroundColor: Colors.black,
+                      ),
+                    ),
+                    Gap(10),
+                       Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: BlocBuilder<SearchBloc, SearchState>(
+                              builder: (context, state) {
+                                return DropdownButton<String>(
+                                  underline: const SizedBox(),
+                                  hint: Text(_selectedSort ?? 'Sort by'),
+                                  value: _selectedSort,
+                                  items:
+                                      _sortOptions.map((String option) {
+                                        return DropdownMenuItem<String>(
+                                          value: option,
+                                          child: Text(option),
+                                        );
+                                      }).toList(),
+                                  onChanged: (String? newValue) {
+                                    if (newValue != null) {
+                                      _selectedSort = newValue;
+                                      context.read<SearchBloc>().add(
+                                        SortChanged(newValue),
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                     
+                     ],
+                   ),
+                  
+                  
+            
+              BlocBuilder<SearchBloc, SearchState>(
+                builder: (context, state) {
+                  if(state is SearchLoading){
+                    return Center(child: CircularProgressIndicator(),);
+                  }else if(state is SearchLoaded && state.searchs.isNotEmpty){
+                    final books = state.searchs;
+                  return Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => Gap(5),
+                      itemCount: books.length,
+                      itemBuilder: (context, index) {
+                        final book=books[index];
+                        return InkWell(
+                          onTap: (){
+                            Navigator.push(context,MaterialPageRoute(builder:(context)=>
+                            BookInfo(book: book, userid:userData!.uid! )
+                            ));
+                          },
+                          child: Row(children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Image.network(book['imageUrls'][0],width: 50,height: 70,fit: BoxFit.fill,),
+                              ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: 
+                          
+                            [ 
+                              Text(book['bookName']),
+                            Text(book['authorName'])],)
+                          ],),
+                        );
+                      },
+                    ),
+                  );
+                  }else if(state is SearchError){
+                    return Center(child: Text('error'),);
+                  }else{
+                    return Center(child: Text('big error'),);
+                  }
                 },
-                decoration: InputDecoration(
-                  hintText: "Search books...",
-                  border: OutlineInputBorder(),
-                ),
               ),
-            ),
-            // Rest of your page content (if any)
-          ],
-              ),
-          
-              // Overlayed search result box
-             
             ],
           ),
-        ],
+        ),
       ),
-),  
     );
   }
 }

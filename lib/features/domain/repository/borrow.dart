@@ -15,6 +15,7 @@ class BorrowService {
       showLoadingDialogBorrow(context);
       log('Borrowing book with ID: $bookId for user with ID: $userId');
       final userDoc = await _firestore.collection('users').doc(userId).get();
+      final bookDoc = await _firestore.collection('books').doc(bookId).get();
 
       if (!userDoc.exists) {
         log("User not found");
@@ -23,12 +24,10 @@ class BorrowService {
 
       final userData = userDoc.data()!;
       final bool isBlocked = userData['isBlock'] ?? false;
-
-      // stocks = if(stocs > 0) { true } else { false }
-      // is overdue = if (overdue==false) { true } else { false }
+      final bookData=bookDoc.data();
       // boook = collections(borrows).where(bookid == bookId).&& (usrid ==usreid) ====false
-      // subscription = collection(users).(usrid).(borrowlimit)>0===treu;
-  
+      // subscription = collection(users).(usrid).(borrowlimit)>0===true;
+
 
       if (isBlocked) {
         Navigator.pop(context);
@@ -36,6 +35,13 @@ class BorrowService {
           SnackBar(content: Text("You are blocked from borrowing books")),
         );
         log("User is blocked");
+        return;
+      }if (bookData!['stocks']<=0) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("book is not available")),
+        );
+        log("stock out");
         return;
       }
       final borrowDate = DateTime.now();
@@ -69,7 +75,12 @@ class BorrowService {
           batch.set(bookBorrowRef, {'borrowId': borrowId});
 
       final newScore = (userData['score'] ?? 0) + 100;
+      final newStock=(bookData['stocks']??0)-1;
+      final newReaders=(bookData['readers']??0)+1;
       final userRef = _firestore.collection('users').doc(userId);
+      final bookRef = _firestore.collection('books').doc(bookId);
+      batch.update(bookRef, {'stocks':newStock});
+      batch.update(bookRef, {'readers':newReaders});
       batch.update(userRef, {'score': newScore});
       await batch.commit();
       Navigator.pop(context);
@@ -82,9 +93,6 @@ class BorrowService {
         ));
       log("Book borrowed successfully");
 
-
-      // user score =userid.score +100;
-      // // stock=bookid.stock -1;
       // user count =userid.borrowcount -1;
       // book readers= bookid.readers +1'
     } catch (e) {

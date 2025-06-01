@@ -23,7 +23,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       User? user = await _authService.signIn(event.email, event.password);
       if (user != null) {
-        await _authService.fetchUserData(user.uid);
+        // await _authService.fetchUserData(user.uid);
         emit(LoginSuccess(user));
       } else {
         emit(LoginFailure("Invalid credentials"));

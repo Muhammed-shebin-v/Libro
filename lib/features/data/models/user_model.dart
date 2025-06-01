@@ -1,47 +1,58 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:libro/features/data/models/book.dart';
 
 
 class UserModel {
-  final String uid;
-  final String username;
-  final String fullName;
-  final String email;
-  final String address;
-  final String phoneNumber;
-  final String imgUrl;
-  final String createdAt;
+  final String? uid;
+  final String? username;
+  final String? email;
+  final String? place;
+  final String? phoneNumber;
+  final String?imgUrl;
+  final DateTime? createdAt;
   final bool? isBlock;
   final int? score;
+  final String? subscriptionType;
+  final int? borrowLimit;
+  final DateTime? subscriptionDate;
+  final List<BookModel>? borrowedBooks;
+  
 
 
   UserModel({
-    required this.uid,
-    required this.username,
-    required this.fullName,
-    required this.email,
-    required this.address,
-    required this.phoneNumber,
-    required this.imgUrl,
-    required this.createdAt,
+     this.uid,
+     this.username,
+     this.email,
+     this.place,
+     this.phoneNumber,
+     this.imgUrl,
+     this.createdAt,
     this.isBlock,
     this.score,
+    this.borrowLimit,
+    this.borrowedBooks,
+    this.subscriptionDate,
+    this.subscriptionType
 
   });
 
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
-      'username': username,
-      'fullName': fullName,
+      'userName': username,
       'email': email,
-      'address': address,
+      'place': place,
       'phoneNumber': phoneNumber,
-      'createdAt': DateTime.now(),
       'imgUrl':imgUrl,
+      'createdAt': DateTime.now(),
       'isBlock':false,
       'score':0,
+      'subType':subscriptionType,
+      'borrowLimit':0,
+      'subDate':DateTime.now(),
+      'borrowedBooks':borrowedBooks
     };
   }
 
@@ -49,15 +60,20 @@ class UserModel {
     final data = doc.data() as Map<String, dynamic>;
     return UserModel(
       uid: data['uid'] ?? '',
-      username: data['username'] ?? '',
-      fullName: data['fullName'] ?? '',
+      username: data['userName'] ?? '',
       email: data['email'] ?? '',
-      address: data['address'] ?? '',
+      place: data['place'] ?? '',
       phoneNumber: data['phoneNumber'] ?? '',
       imgUrl: data['imgUrl']??'',
-      createdAt:data['date']?.toDate().toString() ?? '',
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
       isBlock: data['isBlock'] ?? false,
       score: data['score'] ?? 0,
+      subscriptionType: data['subTyple']??'',
+      borrowLimit: data['borrowLimit']??3,
+      subscriptionDate:  (data['subDate'] as Timestamp).toDate(),
+      borrowedBooks: data['borrowedBooks'],
+
+
     );
   }
 }
@@ -113,13 +129,13 @@ class UserDatabaseService {
   DocumentReference get userDocument => usersCollection.doc(uid);
 
   // Future<bool> createUserProfile({
-  //   required String uid,
-  //   required String username,
-  //   required String email,
-  //   required String fullName,
-  //   required String address,
-  //   required String phoneNumber,
-  //   required String imgurl
+  //    String uid,
+  //    String username,
+  //    String email,
+  //    String fullName,
+  //    String address,
+  //    String phoneNumber,
+  //    String imgurl
   // }) async {
   //   try {
   //     final isAvailable = await isUsernameAvailable(username);

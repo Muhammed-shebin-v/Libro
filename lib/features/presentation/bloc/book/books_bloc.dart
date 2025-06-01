@@ -38,10 +38,6 @@ class BookBloc extends Bloc<BookEvent, BookState> {
       emit(BookLoaded(current.books, selectedBook: event.book));
     }
   }
-    
-    
-    
-
   }
 
 

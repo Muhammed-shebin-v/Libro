@@ -5,13 +5,14 @@ class BookModel {
   final String authorName;
   final String description;
   final String category;
-  final String pages;
-  final String stocks;
+  final int pages;
+  final int stocks;
   final String location;
   final List<String> imageUrls;
   final String? borrowDate;
   final String? returnDate;
   final int? fine;
+  final int?currentStock;
   
 
   BookModel({
@@ -28,6 +29,7 @@ class BookModel {
      this.returnDate,
      this.fine,
     this.uid,
+    this.currentStock
   });
 
 
@@ -43,6 +45,7 @@ class BookModel {
       stocks: data['stocks'] ?? 0,
       location: data['location'] ?? '',
       imageUrls: List<String>.from(data['imageUrls'] ?? []),
+      currentStock: data['currentStock']??''
     );
   }
 

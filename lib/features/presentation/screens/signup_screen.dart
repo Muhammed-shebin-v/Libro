@@ -1,26 +1,25 @@
+
+
+
+
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:libro/features/data/models/user_model.dart';
+import 'package:libro/features/presentation/dummmy/const.dart';
 import 'package:libro/features/presentation/screens/details_screen.dart';
 import 'package:libro/features/presentation/screens/login_screen.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/widgets/animation.dart';
 import 'package:libro/features/presentation/widgets/form.dart';
+import 'package:libro/features/presentation/widgets/sub2.dart';
 
 class SignupScreen extends StatefulWidget {
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final TextEditingController usernameController;
-  final TextEditingController confirmPasswordController;
-  String uid;
-  SignupScreen({
+   SignupScreen({
     super.key,
-    required this.emailController,
-    required this.passwordController,
-    required this.usernameController,
-    required this.confirmPasswordController,
-    required this.uid,
   });
 
   @override
@@ -28,44 +27,57 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController passwordController= TextEditingController();
+
+  final TextEditingController usernameController= TextEditingController();
+
+  final TextEditingController confirmPasswordController= TextEditingController();
+
   bool _isLoading = false;
+
   bool _obscurePassword = true;
+
   bool _obscureConfirmPassword = true;
 
   final _formKey = GlobalKey<FormState>();
 
-  Future<void> _createAuthUser() async {
+  Future<void> _createAuthUser(context) async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      // setState(() {
+      //   _isLoading = true;
+      // });
 
       try {
         final userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
-              email: widget.emailController.text.trim(),
-              password: widget.passwordController.text.trim(),
+              email: emailController.text.trim(),
+              password: passwordController.text.trim(),
             );
 
-        if (userCredential.user != null) {
-          if (mounted) {
-            widget.uid = userCredential.user!.uid;
+        if (userCredential.user != null){
+          // if (mounted) {
+          //   // widget.uid = userCredential.user!.uid;
+          //   // log(widget.uid);
+          //   widget.user= UserModel(uid: userCredential.user!.uid,email: emailController.text,username: usernameController.text);
+            userhi=UserModel(uid: userCredential.user!.uid,email: emailController.text,username: usernameController.text);
             context.read<OnboardingBloc>().add(NextPageEvent());
             
-          }
-        }
+        //   }
+         }
       } catch (e) {
-        if (mounted) {
+        // if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Authentication Error: ${e.toString()}')),
           );
-        }
+        // }
       } finally {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
+        // if (mounted) {
+        //   setState(() {
+        //     _isLoading = false;
+        //   });
+        // }
       }
     }
   }
@@ -86,7 +98,7 @@ class _SignupScreenState extends State<SignupScreen> {
             Expanded(child: SizedBox()),
             CustomForm(
               title: 'User name',
-              controller: widget.usernameController,
+              controller: usernameController,
               validator: (value) {
                 if (value == null || value.trim().isEmpty || value.length < 2) {
                   return 'Please enter username';
@@ -99,7 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             CustomForm(
               title: 'Email',
-              controller: widget.emailController,
+              controller:emailController,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please enter email';
@@ -114,15 +126,15 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomForm(
               obsecure: _obscurePassword,
               title: 'Password',
-              controller: widget.passwordController,
+              controller:passwordController,
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscurePassword ? Icons.visibility : Icons.visibility_off,
                 ),
                 onPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
+                  // setState(() {
+                  //   _obscurePassword = !_obscurePassword;
+                  // });
                 },
               ),
               validator: (value) {
@@ -138,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomForm(
               obsecure: _obscureConfirmPassword,
               title: 'Confirm',
-              controller: widget.confirmPasswordController,
+              controller: confirmPasswordController,
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscureConfirmPassword
@@ -146,16 +158,16 @@ class _SignupScreenState extends State<SignupScreen> {
                       : Icons.visibility_off,
                 ),
                 onPressed: () {
-                  setState(() {
-                    _obscureConfirmPassword = !_obscureConfirmPassword;
-                  });
+                  // setState(() {
+                  //   _obscureConfirmPassword = !_obscureConfirmPassword;
+                  // });
                 },
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please confirm your password';
                 }
-                if (value != widget.passwordController.text) {
+                if (value != passwordController.text) {
                   return 'Passwords do not match';
                 }
                 return null;
@@ -165,7 +177,10 @@ class _SignupScreenState extends State<SignupScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  _createAuthUser();
+                  _createAuthUser(context);
+                  // log(widget.uid);
+                  
+
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,

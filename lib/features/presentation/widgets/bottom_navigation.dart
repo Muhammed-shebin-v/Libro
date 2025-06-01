@@ -9,6 +9,7 @@ import 'package:libro/features/presentation/bloc/bottom_navigation/bottom_navigt
 import 'package:libro/features/presentation/screens/book_shelf.dart';
 import 'package:libro/features/presentation/screens/home_screen.dart';
 import 'package:libro/features/presentation/screens/qr_scanner.dart';
+import 'package:libro/features/presentation/screens/search_screen.dart';
 import 'package:libro/features/presentation/screens/user.dart';
 
 class BottomNavigation extends StatelessWidget {
@@ -17,7 +18,7 @@ class BottomNavigation extends StatelessWidget {
 
   final List<Widget> _pages = [
     HomeScreen(),
-    // SearchScreen(),
+    SearchScreen(),
     QrScanner(),
     Bookshelf(),
     User(),
@@ -52,10 +53,10 @@ class BottomNavigation extends StatelessWidget {
                     icon: Icons.home,
                     text: 'Home',
                   ),
-                  // GButton(
-                  //   icon: Icons.search,
-                  //   text: 'search',
-                  // ),
+                  GButton(
+                    icon: Icons.search,
+                    text: 'search',
+                  ),
                   GButton(
                     icon: Icons.chat,
                     text: 'AI Chat',

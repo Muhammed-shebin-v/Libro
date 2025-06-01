@@ -1,3 +1,7 @@
+
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/core/themes/fonts.dart';
@@ -52,7 +56,6 @@ class QrScanner extends StatelessWidget {
                               child: Book(
                                 color: AppColors.color30,
                                 image: 'lib/assets/images.jpeg',
-                                
                               ),
                             ),
                             Column(
@@ -68,10 +71,7 @@ class QrScanner extends StatelessWidget {
                                   '196 pages • 1000readers • 4.3+rating',
                                   style: AppFonts.body2,
                                 ),
-                                Text(
-                                  'Fictional',
-                                  style: AppFonts.body2,
-                                ),
+                                Text('Fictional', style: AppFonts.body2),
                               ],
                             ),
                           ],
@@ -126,27 +126,7 @@ class QrScanner extends StatelessWidget {
                 Gap(20),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SlideAction(
-                    height: 80,
-                    text: 'Slide to Return',
-                    textColor: Colors.black,
-                    innerColor: Colors.white,
-                    outerColor: AppColors.color10,
-                    sliderButtonIcon: const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.black,
-                    ),
-                    key: slideActionKey,
-                    animationDuration: Duration(milliseconds: 300),
-                    onSubmit: () async{
-                     await  Future.delayed(
-                        const Duration(seconds: 2),
-                        () => slideActionKey.currentState!.reset(),
-                      );
-                      Navigator.pop(context);
-                    },
-                    elevation: 0,
-                  ),
+                  child: SlideWidget(slideKey: slideActionKey, title: 'slide to return',function: fun(),)
                 ),
               ],
             ),
@@ -156,3 +136,37 @@ class QrScanner extends StatelessWidget {
     );
   }
 }
+
+class SlideWidget extends StatelessWidget {
+  final GlobalKey<SlideActionState> slideKey;
+  final String title;
+  final function;
+  const SlideWidget({super.key, required this.slideKey, required this.title,required this.function});
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideAction(
+      height: 80,
+      text: title,
+      textColor: Colors.black,
+      innerColor: Colors.white,
+      outerColor: AppColors.color10,
+      sliderButtonIcon: const Icon(Icons.arrow_forward, color: Colors.black),
+      key: slideKey,
+      animationDuration: Duration(milliseconds: 300),
+      // onSubmit: () async {
+      //   await Future.delayed(
+      //     const Duration(seconds: 2),
+      //     () => slideKey.currentState!.reset(),
+      //   );
+      //   // Navigator.pop(context);
+      //   function;
+      // },
+      onSubmit: function,
+      elevation: 0,
+    );
+  }
+}
+  fun(){
+    log('ff');
+  }
