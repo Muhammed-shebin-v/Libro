@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/features/auth/auth_service.dart';
+import 'package:libro/features/data/models/user_model.dart';
 import 'package:libro/features/presentation/screens/login_screen.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/presentation/widgets/sub2.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatelessWidget {
   Settings({super.key});
   final _auth = AuthService();
+    Future<void> deleteUserFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+     prefs..remove('uid')..
+     remove('username')..remove('imgUrl');
+     
+
+   
+  }
   @override
   Widget build(BuildContext contextS) {
     return Scaffold(
@@ -93,7 +104,10 @@ class Settings extends StatelessWidget {
              
               Gap(5),
               InkWell(
-                onTap: (){showLogoutDialog(contextS);},
+                onTap: ()async{
+                 await showLogoutDialog(contextS);
+                 await deleteUserFromPrefs();
+                  },
                 child: Text('Log out', style: TextStyle(color: Colors.red)),
               ),
               Expanded(child: SizedBox()),
@@ -140,7 +154,7 @@ class Settings extends StatelessWidget {
             
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) => LibroSubscriptionScreen2()),
                   );
           },
           child: Text("Logout", style: TextStyle(color: Colors.red)),

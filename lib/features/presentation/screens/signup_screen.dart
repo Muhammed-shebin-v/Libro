@@ -18,8 +18,10 @@ import 'package:libro/features/presentation/widgets/form.dart';
 import 'package:libro/features/presentation/widgets/sub2.dart';
 
 class SignupScreen extends StatefulWidget {
+
    SignupScreen({
     super.key,
+
   });
 
   @override
@@ -60,9 +62,12 @@ class _SignupScreenState extends State<SignupScreen> {
           // if (mounted) {
           //   // widget.uid = userCredential.user!.uid;
           //   // log(widget.uid);
-          //   widget.user= UserModel(uid: userCredential.user!.uid,email: emailController.text,username: usernameController.text);
+          
             userhi=UserModel(uid: userCredential.user!.uid,email: emailController.text,username: usernameController.text);
-            context.read<OnboardingBloc>().add(NextPageEvent());
+              ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('success')),
+          );
+            nextscreen();
             
         //   }
          }
@@ -71,6 +76,7 @@ class _SignupScreenState extends State<SignupScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Authentication Error: ${e.toString()}')),
           );
+          log(e.toString());
         // }
       } finally {
         // if (mounted) {
@@ -81,7 +87,9 @@ class _SignupScreenState extends State<SignupScreen> {
       }
     }
   }
-
+  void nextscreen(){
+    context.read<OnboardingBloc>().add(NextPageEvent());
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(

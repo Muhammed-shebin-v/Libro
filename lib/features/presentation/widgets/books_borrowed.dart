@@ -28,7 +28,7 @@ class _BoookState extends State<BookBorrowedInfo> {
             onPressed: () {
               BorrowService().borrowBook(
                 userId: widget.userid,
-                bookId: widget.book.uid!,
+                bookId: widget.book.uid,
                 context: context,
               );
             },

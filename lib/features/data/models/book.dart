@@ -1,5 +1,7 @@
+import 'package:flutter/widgets.dart';
+
 class BookModel {
-  final String? uid;
+  final String uid;
   final String bookName;
   final String bookId;
   final String authorName;
@@ -8,11 +10,22 @@ class BookModel {
   final int pages;
   final int stocks;
   final String location;
+  final Color color;
+  final int readers;
   final List<String> imageUrls;
-  final String? borrowDate;
-  final String? returnDate;
+  final DateTime? borrowDate;
+  final DateTime? returnDate;
   final int? fine;
-  final int?currentStock;
+  final String? status;
+  final int currentStock;
+
+
+
+
+
+
+
+
   
 
   BookModel({
@@ -25,11 +38,14 @@ class BookModel {
     required this.stocks,
     required this.location,
     required this.imageUrls,
-     this.borrowDate,
-     this.returnDate,
-     this.fine,
-    this.uid,
-    this.currentStock
+    required this.uid, 
+    required this.currentStock,
+    required this.color,
+    required this.readers,
+    this.borrowDate,
+    this.returnDate,
+    this.fine,
+    this.status
   });
 
 
@@ -45,7 +61,9 @@ class BookModel {
       stocks: data['stocks'] ?? 0,
       location: data['location'] ?? '',
       imageUrls: List<String>.from(data['imageUrls'] ?? []),
-      currentStock: data['currentStock']??''
+      currentStock: data['currentStock']??0,
+      color: Color(data['color']),
+       readers: data['readers']??0
     );
   }
 

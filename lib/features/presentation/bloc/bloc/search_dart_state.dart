@@ -1,5 +1,7 @@
 
 
+import 'package:libro/features/data/models/book.dart';
+
 abstract class SearchState {
   const SearchState();
 }
@@ -11,14 +13,14 @@ class SearchLoading extends SearchState {
 }
 
 class SearchLoaded extends SearchState {
-  final List<Map<String, dynamic>> searchs;
-  final Map<String, dynamic>? selectedSearch;
+  final List<BookModel> searchs;
+  final BookModel? selectedSearch;
 
   const SearchLoaded(this.searchs, {this.selectedSearch});
 
   SearchLoaded copyWith({
-    List<Map<String, dynamic>>? searchs,
-    Map<String, dynamic>? selectedSearch,
+    List<BookModel>? searchs,
+    BookModel? selectedSearch,
   }) {
     return SearchLoaded(
       searchs ?? this.searchs,

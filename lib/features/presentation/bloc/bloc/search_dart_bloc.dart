@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:libro/features/data/models/book.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_event.dart';
 import 'package:libro/features/presentation/bloc/bloc/search_dart_state.dart';
 
@@ -22,8 +23,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     try {
       final snapshot =
           await FirebaseFirestore.instance.collection('books').get();
-      final bookList = snapshot.docs.map((e) => e.data()).toList();
-
+      final bookList = snapshot.docs.map((e) => BookModel.fromMap(e.data())).toList();
       emit(SearchLoaded(bookList));
     } catch (e) {
       emit(SearchError("Failed to fetch users: $e"));
@@ -49,7 +49,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
               .orderBy('bookName')
               .get();
 
-      final books = snapshot.docs.map((doc) => doc.data()).toList();
+      final books = snapshot.docs.map((doc) =>  BookModel.fromMap(doc.data())).toList();
       emit(SearchLoaded(books));
     } catch (e) {
       emit(SearchError('Failed to load books'));
@@ -68,7 +68,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
               .orderBy('date', descending: true)
               .get();
 
-      final books = snapshot.docs.map((doc) => doc.data()).toList();
+      final books = snapshot.docs.map((doc) =>  BookModel.fromMap(doc.data())).toList();
       emit(SearchLoaded(books));
     } catch (e) {
       emit(SearchError('Failed to load books'));
@@ -98,7 +98,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
               .collection('books')
               .where('category', isEqualTo: event.categoryName)
               .get();
-      final books = snapshot.docs.map((doc) => doc.data()).toList();
+      final books = snapshot.docs.map((doc) =>  BookModel.fromMap(doc.data())).toList();
       log(books.toString());
       emit(SearchLoaded(books));
     } catch (e) {
@@ -120,10 +120,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final snapshot =
           await FirebaseFirestore.instance.collection('books').get();
       final results =
-          snapshot.docs.map((doc) => doc.data()).where((data) {
-            final bookName = (data['bookName'] ?? '').toString().toLowerCase();
+          snapshot.docs.map((doc) => BookModel.fromMap(doc.data())).toList().where((data) {
+            final bookName = (data.bookName).toString().toLowerCase();
             final authorName =
-                (data['authorName'] ?? '').toString().toLowerCase();
+                (data.authorName).toString().toLowerCase();
             return bookName.contains(query) || authorName.contains(query);
           }).toList();
       emit(SearchLoaded(results));

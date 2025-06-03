@@ -27,12 +27,7 @@ class User extends StatelessWidget {
       return UserModel(
         uid: uid,
         username: prefs.getString('username') ?? '',
-        // fullName: prefs.getString('fullName') ?? '',
-        email: prefs.getString('email') ?? '',
-        phoneNumber: prefs.getString('phone') ?? '',
-        place: prefs.getString('address') ?? '',
         imgUrl: prefs.getString('imgUrl') ?? '',
-        // createdAt: prefs.getString('createdAt') ?? '',
         score: prefs.getInt('score') ?? 0,
       );
     }
@@ -275,9 +270,7 @@ class User extends StatelessWidget {
                                                                 .start,
                                                         children: [
                                                           Book(
-                                                            color: Color(
-                                                              0xFFE8E8E8,
-                                                            ),
+                                                            color:borrowedbook.color,
                                                             image:
                                                                 borrowedbook
                                                                     .imageUrls[0],

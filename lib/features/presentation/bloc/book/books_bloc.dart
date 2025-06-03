@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
@@ -25,10 +26,16 @@ class BookBloc extends Bloc<BookEvent, BookState> {
     try {
       final snapshot = await booksRef.get();
       final bookList =
-          snapshot.docs.map((e) => e.data() as Map<String, dynamic>).toList();
+          snapshot.docs.map((e) => BookModel.fromMap(e.data() as Map<String, dynamic>))
+    .toList();
+    bookList.isNotEmpty?log('not'):log('mty');
+
+
+
       emit(BookLoaded(bookList));
     } catch (e) {
-      emit(BookError("Failed to fetch users: $e"));
+      emit(BookError("Failed to fetch books: $e"));
+      log(e.toString());
     }
   }
 

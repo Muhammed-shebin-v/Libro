@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,21 +20,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // UserModel? userGlobal;
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
-  Future<UserModel?> getUserFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    final uid = prefs.getString('uid');
-    if (uid == null) return null;
-    return UserModel(
-      uid: uid,
-      username: prefs.getString('username') ?? '',
-      imgUrl: prefs.getString('imgUrl') ?? '',
-    );
-  }
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+  
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+Future<UserModel?> getUserFromPrefs() async {
+      final prefs = await SharedPreferences.getInstance();
+      final uid = prefs.getString('uid');
+      if (uid == null) return null;
+      return UserModel(
+        uid: uid,
+        username: prefs.getString('username') ?? '',
+        imgUrl: prefs.getString('imgUrl') ?? '',
+        score: prefs.getInt('score') ?? 0,
+      );
+    }
+ 
+
 
   @override
   Widget build(BuildContext context) {
+    getUserFromPrefs();
     return Scaffold(
       backgroundColor: AppColors.color60,
       appBar: AppBar(
@@ -51,18 +64,18 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
 
-      body: FutureBuilder<UserModel?>(
+      body:FutureBuilder<UserModel?>(
         future: getUserFromPrefs(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text("Something went wrong"));
-          } else if (!snapshot.hasData || snapshot.data == null) {
+          } else if (!snapshot.hasData ) {
             return Center(child: Text("No user found"));
           }
           final userData = snapshot.data!;
-          // userGlobal = userData;
+          log(userData.imgUrl.toString());
           return SingleChildScrollView(
             child: SafeArea(
               child: Column(
@@ -92,7 +105,7 @@ class HomeScreen extends StatelessWidget {
 
                         Gap(20),
 
-                        // Gap(40),          
+                        // Gap(40),
                         // SizedBox(
                         //   height: 100,
                         //   child: ListView.builder(
@@ -152,10 +165,6 @@ class HomeScreen extends StatelessWidget {
                               ],
                             ),
 
-
-
-
-
                             child: BooksList(
                               title: '  Books of The Week',
                               books: books,
@@ -198,9 +207,9 @@ class HomeScreen extends StatelessWidget {
                                         child: CircularProgressIndicator(),
                                       );
                                     } else if (state is BookError) {
-                                      return Center(child: Text('error'));
+                                      return Center(child: Text('error ygyggy'));
                                     } else if (state is BookLoaded) {
-                                      final book = state.books;
+                                      final books = state.books;
                                       return Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -214,8 +223,9 @@ class HomeScreen extends StatelessWidget {
                                             height: 220,
                                             child: ListView.builder(
                                               scrollDirection: Axis.horizontal,
-                                              itemCount: book.length,
+                                              itemCount: books.length,
                                               itemBuilder: (context, index) {
+                                                final book=books[index];
                                                 return Padding(
                                                   padding:
                                                       const EdgeInsets.symmetric(
@@ -234,7 +244,7 @@ class HomeScreen extends StatelessWidget {
                                                                     userData
                                                                         .uid!,
                                                                 book:
-                                                                    book[index],
+                                                                    book,
                                                               ),
                                                         ),
                                                       );
@@ -245,11 +255,9 @@ class HomeScreen extends StatelessWidget {
                                                               .start,
                                                       children: [
                                                         Book(
-                                                          color: Color(
-                                                            book[index]['color'],
-                                                          ),
+                                                          color: book.color,
                                                           image:
-                                                              book[index]['imageUrls'][0],
+                                                              book.imageUrls.first,
                                                         ),
                                                         Gap(5),
                                                         SizedBox(
@@ -261,7 +269,7 @@ class HomeScreen extends StatelessWidget {
                                                             spacing: 5,
                                                             children: [
                                                               Text(
-                                                                book[index]['bookName'],
+                                                                book.bookName,
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
@@ -272,7 +280,7 @@ class HomeScreen extends StatelessWidget {
                                                                     ),
                                                               ),
                                                               Text(
-                                                                book[index]['authorName'],
+                                                                book.authorName,
                                                                 style:
                                                                     AppFonts
                                                                         .body2,
@@ -293,7 +301,7 @@ class HomeScreen extends StatelessWidget {
                                                                       ),
                                                                 ),
                                                                 child: Text(
-                                                                  book[index]['category'],
+                                                                  book.category,
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -336,11 +344,12 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-          );
-        },
-      ),
-    );
+            )
+      );
+        })
+            );
+        }
+  
   }
 
   final List<String> books = [
@@ -390,7 +399,7 @@ class HomeScreen extends StatelessWidget {
     const Color.fromARGB(255, 248, 108, 53),
     const Color.fromARGB(255, 216, 112, 181),
   ];
-}
+
 
 class PushIconButton extends StatelessWidget {
   final nextScreen;
@@ -403,7 +412,7 @@ class PushIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  IconButton(
+    return IconButton(
       onPressed: () {
         Navigator.push(
           context,

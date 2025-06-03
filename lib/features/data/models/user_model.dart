@@ -17,7 +17,6 @@ class UserModel {
   final String? subscriptionType;
   final int? borrowLimit;
   final DateTime? subscriptionDate;
-  final List<BookModel>? borrowedBooks;
   
 
 
@@ -32,7 +31,6 @@ class UserModel {
     this.isBlock,
     this.score,
     this.borrowLimit,
-    this.borrowedBooks,
     this.subscriptionDate,
     this.subscriptionType
 
@@ -50,14 +48,12 @@ class UserModel {
       'isBlock':false,
       'score':0,
       'subType':subscriptionType,
-      'borrowLimit':0,
+      'borrowLimit':3,
       'subDate':DateTime.now(),
-      'borrowedBooks':borrowedBooks
     };
   }
 
-  factory UserModel.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory UserModel.fromDocument( Map<String,dynamic> data) {
     return UserModel(
       uid: data['uid'] ?? '',
       username: data['userName'] ?? '',
@@ -71,7 +67,6 @@ class UserModel {
       subscriptionType: data['subTyple']??'',
       borrowLimit: data['borrowLimit']??3,
       subscriptionDate:  (data['subDate'] as Timestamp).toDate(),
-      borrowedBooks: data['borrowedBooks'],
 
 
     );
@@ -202,7 +197,8 @@ class UserDatabaseService {
   Stream<UserModel?> get userData {
     return userDocument.snapshots().map((doc) {
       if (doc.exists) {
-        return UserModel.fromDocument(doc);
+       return UserModel.fromDocument(doc.data() as Map<String, dynamic>);
+
       }
       return null;
     });
@@ -212,7 +208,8 @@ class UserDatabaseService {
     try {
       final doc = await userDocument.get();
       if (doc.exists) {
-        return UserModel.fromDocument(doc);
+     return UserModel.fromDocument(doc.data() as Map<String, dynamic>);
+
       }
       return null;
     } catch (e) {

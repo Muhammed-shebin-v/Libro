@@ -84,7 +84,6 @@ class LibroSubscriptionScreen2 extends StatelessWidget {
                                   //   // passwordController: passwordController,
                                   //   // usernameController: usernameController,
                                   //   // confirmPasswordController:confirmPasswordController,
-                                  // user: addUserDetails,
                                   ),
                                   DetailsScreen(
                                     // fullNameController: fullNameController,
@@ -94,7 +93,6 @@ class LibroSubscriptionScreen2 extends StatelessWidget {
                                     // imgUrl: imgUrl,
                                     // uid: uid,
                                     // email: emailController,
-                                    // usertemp: addUserDetails,
                                   ),
                                   SubscriptionPage(
                                     // subType: subscription,
@@ -105,7 +103,6 @@ class LibroSubscriptionScreen2 extends StatelessWidget {
                                     // imageUrl: imgUrl,
                                     // phone: phoneNumberController,
                                     // place: placeController,
-                                    // usertemp: addUserDetails,
                                   ),
                                 ],
                               ),

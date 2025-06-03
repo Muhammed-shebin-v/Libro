@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/features/data/models/user_model.dart';
-import 'package:libro/features/presentation/screens/qr_scanner.dart';
-import 'package:libro/features/presentation/screens/subscription.dart';
+import 'package:libro/features/presentation/widgets/bottom_navigation.dart';
 import 'package:libro/features/presentation/widgets/sub2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_to_act/slide_to_act.dart';
@@ -68,28 +67,33 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
 }
 
 class SubscriptionPage extends StatelessWidget {
-  SubscriptionPage({super.key});
+  SubscriptionPage({super.key,});
   final GlobalKey<SlideActionState> slidekey = GlobalKey();
 
   Future<void> _saveUserDetails(context) async {
     try {
       final userData = UserModel(
         uid: userhi.uid,
-
         username: userhi.username,
-        // fullName: userhi.fullName,
         email: userhi.email,
         place: userhi.place,
         phoneNumber: userhi.phoneNumber,
         imgUrl: userhi.imgUrl,
-        // createdAt: DateTime.now().toString(),
-      );
+        subscriptionType: subType
 
+      );
+  
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userData.uid)
           .set(userData.toMap());
-      await saveUserToPrefs(uid: userData.uid!,username: userData.username!,imgUrl: userData.imgUrl!);
+
+      await saveUserToPrefs(
+        uid: userData.uid!,
+        username: userData.username??'',
+        imgUrl: userData.imgUrl??'',
+      );
+      log(userData.subscriptionType!);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Registration complete!'),
@@ -98,7 +102,7 @@ class SubscriptionPage extends StatelessWidget {
       );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Subscription()),
+        MaterialPageRoute(builder: (context) => BottomNavigation()),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -108,6 +112,7 @@ class SubscriptionPage extends StatelessWidget {
       // }
     }
   }
+  String subType='Silver';
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +202,7 @@ class SubscriptionPage extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.read<SubscriptionCubit>().selectPlan(value);
-        // subType=selectedplan;
+        subType=value;
       },
       child: Container(
         width: double.infinity,
@@ -265,11 +270,14 @@ class SubscriptionPage extends StatelessWidget {
   }
 }
 
-
- Future<void> saveUserToPrefs({required String uid,required String username,required String imgUrl}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('uid', uid);
-    await prefs.setString('username', username);
-    await prefs.setString('imgUrl',imgUrl);
-    log('User saved to prefs: $uid');
-  }
+Future<void> saveUserToPrefs({
+  required String uid,
+  required String username,
+  required String imgUrl,
+}) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('uid', uid);
+  await prefs.setString('username', username);
+  await prefs.setString('imgUrl', imgUrl);
+  log('User saved to prefs: $uid');
+}

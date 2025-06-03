@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/data/models/book.dart';
 import 'package:libro/features/domain/repository/borrow.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
 
 
 class BookInfo extends StatefulWidget {
-  final book;
+  final BookModel book;
   final String userid;
   const BookInfo({super.key,required this.book,required this.userid});
 
@@ -27,7 +28,7 @@ class _BoookState extends State<BookInfo> {
           IconButton(onPressed: () {
             BorrowService().borrowBook(
               userId: widget.userid,
-              bookId: widget.book['uid'],
+              bookId: widget.book.uid,
               context: context,
             );
           }, icon: Icon(Icons.shopping_bag)),
@@ -83,10 +84,10 @@ class _BoookState extends State<BookInfo> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    widget.book['bookName'],
+                                    widget.book.authorName,
                                     style: AppFonts.body1,
                                   ),
-                                  Text(widget.book['authorName']),
+                                  Text(widget.book.authorName),
                                   CustomContainer(
                                     color: AppColors.color60,
                                     radius: BorderRadius.circular(25),
@@ -105,7 +106,9 @@ class _BoookState extends State<BookInfo> {
                                           children: [
                                             Row(
                                               children: [
-                                                Text('Available  '),
+                                                Text(widget.book.currentStock>0?'available':'notAvailable'),
+
+                                                
                                                 Container(
                                                   height: 10,
                                                   width: 10,
@@ -125,12 +128,12 @@ class _BoookState extends State<BookInfo> {
                                                 ),
                                               ],
                                             ),
-                                            Text('${widget.book['pages']} • ${widget.book['category']}'),
+                                            Text('${widget.book.pages} • ${widget.book.category}'),
                                           ],
                                         ),
                                         VerticalDivider(color: Colors.black),
                                         Text(
-                                          '1k+\nreaders',
+                                          '${widget.book.readers} readers',
                                           textAlign: TextAlign.center,
                                         ),
                                       ],
@@ -138,7 +141,7 @@ class _BoookState extends State<BookInfo> {
                                   ),
                                   Gap(20),
                                   Text(
-                                    widget.book['description'],
+                                    widget.book.description,
                                     style: GoogleFonts.k2d(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
@@ -150,7 +153,7 @@ class _BoookState extends State<BookInfo> {
                                     child: Row(
                                       children: [
                                         Icon(Icons.location_pin),
-                                        Text(widget.book['location']),
+                                        Text(widget.book.location),
                                       ],
                                     ),
                                   ),
@@ -163,13 +166,11 @@ class _BoookState extends State<BookInfo> {
                     ),
                    SizedBox(
   height: 220,
-  child: widget.book?['imageUrls'] == null
-      ? const Center(child: Text('No images.'))
-      : PageView.builder(
-          itemCount: widget.book!['imageUrls'].length,
+  child:  PageView.builder(
+          itemCount: widget.book.imageUrls.length,
           controller: PageController(viewportFraction: 0.8),
           itemBuilder: (context, index) {
-            final selectedImage = widget.book!['imageUrls'][index];
+            final selectedImage = widget.book.imageUrls[index];
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 100.0),
               child: Container(

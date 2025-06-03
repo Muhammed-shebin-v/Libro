@@ -11,7 +11,7 @@ class LoadBooks extends SearchEvent {
 }
 
 class SelectBook extends SearchEvent {
-  final Map<String, dynamic> book;
+  final BookModel book;
   const SelectBook(this.book);
 }
 

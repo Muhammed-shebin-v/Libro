@@ -14,7 +14,6 @@ import 'package:libro/features/presentation/widgets/long_button.dart';
 import 'package:libro/features/presentation/widgets/sub2.dart';
 
 class DetailsScreen extends StatelessWidget {
-  // UserModel usertemp;
   DetailsScreen({super.key,});
 
 
@@ -143,12 +142,10 @@ class DetailsScreen extends StatelessWidget {
             CustomLongButton(
               title: 'Continue',
               ontap: () {
-                // widget.usertemp = UserModel(
-                //   imgUrl: _uploadedImageUrl,
-                //   fullName: fullNameController.text,
-                //   phoneNumber: phoneNumberController.text,
-                //   address: placeController.text,
-                // );
+             
+
+
+
                 userhi = UserModel(
                   imgUrl: _uploadedImageUrl,
                   phoneNumber: phoneNumberController.text,
