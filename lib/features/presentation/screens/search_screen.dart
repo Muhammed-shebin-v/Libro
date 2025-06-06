@@ -104,7 +104,7 @@ class _SearchScreenState extends State<SearchScreen> {
               BlocBuilder<SearchBloc, SearchState>(
                 builder: (context, state) {
                   if (state is SearchLoading) {
-                    return Center(child: CircularProgressIndicator());
+                    return  Expanded(child: SizedBox(child:Center(child: CircularProgressIndicator())));
                   } else if (state is SearchLoaded &&
                       state.searchs.isNotEmpty) {
                     final books = state.searchs;
@@ -158,7 +158,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   } else if (state is SearchError) {
                     return Center(child: Text('error'));
                   } else {
-                    return Center(child: Text('big error'));
+                    return Expanded(child: SizedBox(child: Center(child: Text('No Book Found!'))));
                   }
                 },
               ),

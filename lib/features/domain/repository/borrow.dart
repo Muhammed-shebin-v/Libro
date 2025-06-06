@@ -66,6 +66,14 @@ class BorrowService {
         log("stock out");
         return;
       }
+      if(userData['borrowLimit']<=0){
+        Navigator.pop(context);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("borrow limit exceed")));
+        log("limit out");
+        return;
+      }
 
       final borrowId = _firestore.collection('borrows').doc().id;
 

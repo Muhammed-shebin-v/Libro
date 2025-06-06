@@ -207,7 +207,8 @@ class User extends StatelessWidget {
                                   >(
                                     builder: (context, state) {
                                       if (state is UserBorrowLoading) {
-                                        return const Center(
+                                        return const Padding(
+                                          padding: EdgeInsets.all(20),
                                           child: CircularProgressIndicator(),
                                         );
                                       } else if (state is UserBorrowError) {
