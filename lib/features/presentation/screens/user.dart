@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/features/data/models/user_model.dart';
 import 'package:libro/features/presentation/bloc/bloc/borrowed_dart_bloc.dart';
+import 'package:libro/features/presentation/screens/home_screen.dart';
 import 'package:libro/features/presentation/screens/qr_scanner.dart';
 import 'package:libro/features/presentation/screens/settings.dart';
 import 'package:libro/core/themes/fonts.dart';
@@ -357,11 +358,7 @@ class User extends StatelessWidget {
                                   ),
                                   child: BooksList(
                                     title: 'Borrowed Books',
-                                    books: books,
-                                    images: images,
-                                    authors: authors,
-                                    gonores: gonores,
-                                    // colors: colors,
+                                    books: dummybooks
                                   ),
                                 ),
                               ],

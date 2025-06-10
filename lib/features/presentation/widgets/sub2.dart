@@ -78,32 +78,9 @@ class LibroSubscriptionScreen2 extends StatelessWidget {
                                 physics: const NeverScrollableScrollPhysics(),
                                 children: [
                                   LoginScreen(),
-                                  SignupScreen(
-                                  //   // uid: uid!,
-                                  //   // emailController: emailController,
-                                  //   // passwordController: passwordController,
-                                  //   // usernameController: usernameController,
-                                  //   // confirmPasswordController:confirmPasswordController,
-                                  ),
-                                  DetailsScreen(
-                                    // fullNameController: fullNameController,
-                                    // phoneNumberController:
-                                    //     phoneNumberController,
-                                    // placeController: placeController,
-                                    // imgUrl: imgUrl,
-                                    // uid: uid,
-                                    // email: emailController,
-                                  ),
-                                  SubscriptionPage(
-                                    // subType: subscription,
-                                    // uid: uid!,
-                                    // username: usernameController,
-                                    // email: emailController,
-                                    // fulname: fullNameController,
-                                    // imageUrl: imgUrl,
-                                    // phone: phoneNumberController,
-                                    // place: placeController,
-                                  ),
+                                  SignupScreen(),
+                                  DetailsScreen(),
+                                  SubscriptionPage(),
                                 ],
                               ),
                             );

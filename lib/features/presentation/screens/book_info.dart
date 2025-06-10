@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/data/models/book.dart';
 import 'package:libro/features/domain/repository/borrow.dart';
 import 'package:libro/features/presentation/widgets/book_carousal.dart';
 import 'package:libro/features/presentation/widgets/book_details.dart';
 import 'package:libro/features/presentation/widgets/book_review.dart';
-import 'package:libro/features/presentation/widgets/books_list.dart';
+
 import 'package:libro/features/presentation/widgets/container.dart';
 
-class BookInfo extends StatefulWidget {
+class BookInfo extends StatelessWidget {
   final BookModel book;
   final String userid;
-  const BookInfo({super.key, required this.book, required this.userid});
+   BookInfo({super.key, required this.book, required this.userid});
 
-  @override
-  State<BookInfo> createState() => _BoookState();
-}
-
-class _BoookState extends State<BookInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,8 +26,8 @@ class _BoookState extends State<BookInfo> {
           IconButton(
             onPressed: () {
               BorrowService().borrowBook(
-                userId: widget.userid,
-                bookId: widget.book.uid,
+                userId: userid,
+                bookId: book.uid,
                 context: context,
               );
             },
@@ -49,11 +44,6 @@ class _BoookState extends State<BookInfo> {
                 height: 980,
                 child: Stack(
                   children: [
-
-
-
-
-
                     Positioned(
                       top: 150,
                       left: 0,
@@ -89,9 +79,9 @@ class _BoookState extends State<BookInfo> {
                                 ),
                               ],
                             ),
-                            CustomBookDetails(book: widget.book),
+                            CustomBookDetails(book: book),
 
-                            BookCarousal(book: widget.book),
+                            BookCarousal(book: book),
 
                             BookReview(),
                           ],
@@ -115,6 +105,7 @@ class _BoookState extends State<BookInfo> {
     'The Graphic Design Bible',
     'The Way of the Nameless',
   ];
+
   final List<String> images = [
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
@@ -122,6 +113,7 @@ class _BoookState extends State<BookInfo> {
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
     'https://marketplace.canva.com/EAGEuNwgF3k/1/0/1003w/canva-modern-and-simple-prayer-journal-book-cover-UL8kCB4ONE8.jpg',
   ];
+
   final List<String> authors = [
     'Bebble Benze',
     'My name',
@@ -129,6 +121,7 @@ class _BoookState extends State<BookInfo> {
     'Theio Iglis',
     'Graham Douglass ',
   ];
+
   final List<String> gonores = [
     'Architecture',
     'History',
@@ -136,6 +129,7 @@ class _BoookState extends State<BookInfo> {
     'Novel',
     'Fictional',
   ];
+
   final colors = [
     Colors.red,
     const Color.fromARGB(255, 238, 70, 41),

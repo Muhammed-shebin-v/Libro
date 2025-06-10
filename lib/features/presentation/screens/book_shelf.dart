@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/presentation/screens/home_screen.dart';
 import 'package:libro/features/presentation/widgets/book.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
@@ -45,10 +46,7 @@ class Bookshelf extends StatelessWidget {
                 Gap(30),
                 BooksList(
                   title: 'My Books',
-                  books: books,
-                  images: images,
-                  authors: authors,
-                  gonores: gonores,
+                  books:dummybooks
                   // colors: colors,
                 ),
                 Gap(20),

@@ -5,6 +5,7 @@ import 'package:libro/features/presentation/widgets/bottom_navigation.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
 import 'package:libro/features/presentation/widgets/long_button.dart';
+import 'package:libro/features/presentation/widgets/onboarding_heading.dart';
 import 'package:lottie/lottie.dart';
 
 class Subscription extends StatelessWidget {
@@ -20,10 +21,8 @@ class Subscription extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Gap(5),
-              Text('Get Started Today!', style: AppFonts.heading1),
-              Text(
-                'For borrowing books you need to purchase our membership...',
-              ),
+              OnboardingHeading(title: 'Get Started Today!',
+                subTitle:'For borrowing books you need to purchase our membership...',),
               Gap(20),
               CustomContainer(
                 color: AppColors.color30,
@@ -47,7 +46,7 @@ class Subscription extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              'For the price of just one book, unlock unlimited access to a world of physical books! No limits, no extra cost—just endless reading adventures. Read more, spend less! 🚀📖',
+                              'For the price of just one book, unlock unlimited access to a world of physical books! No limits, no extra cost—just endless reading adventures. Read more, spend less! 🚀📖',
                               style: GoogleFonts.k2d(fontSize: 14),
                             ),
                           ),
@@ -63,7 +62,10 @@ class Subscription extends StatelessWidget {
                 ),
               ),
               Gap(20),
-              Text('Membership Pricing',style: GoogleFonts.kalnia(fontSize: 22),),
+              Text(
+                'Membership Pricing',
+                style: GoogleFonts.kalnia(fontSize: 22),
+              ),
               Gap(10),
               CustomContainer(
                 height: 100,
@@ -97,7 +99,7 @@ class Subscription extends StatelessWidget {
                 ),
               ),
               Gap(10),
-                CustomContainer(
+              CustomContainer(
                 height: 100,
                 width: double.infinity,
                 color: AppColors.color30,
@@ -129,7 +131,7 @@ class Subscription extends StatelessWidget {
                 ),
               ),
               Gap(10),
-                CustomContainer(
+              CustomContainer(
                 height: 100,
                 width: double.infinity,
                 color: AppColors.color30,
@@ -161,9 +163,15 @@ class Subscription extends StatelessWidget {
                 ),
               ),
               Gap(20),
-              CustomLongButton(title: 'Complete', ontap: (){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavigation()));
-              })
+              CustomLongButton(
+                widget: Text('Confirm', style: TextStyle(fontSize: 20)),
+                ontap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => BottomNavigation()),
+                  );
+                },
+              ),
             ],
           ),
         ),

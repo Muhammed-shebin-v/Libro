@@ -14,32 +14,25 @@ import 'package:libro/features/presentation/widgets/long_button.dart';
 import 'package:libro/features/presentation/widgets/sub2.dart';
 
 class DetailsScreen extends StatelessWidget {
-  DetailsScreen({super.key,});
-
-
+  DetailsScreen({super.key});
 
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController placeController = TextEditingController();
-  // final String imgUrl = '';
 
   final _formKey = GlobalKey<FormState>();
-   String? _uploadedImageUrl;
+
   final cloudinary = CloudinaryPublic(
     'dwzeuyi12',
     'unsigned_uploads',
     cache: false,
   );
-  XFile? image;
 
 
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
     );
-    // setState(() {
-    //   image = pickedFile;
-    // });
     if (pickedFile != null) {
       await _uploadToCloudinary(File(pickedFile.path));
     }
@@ -55,18 +48,16 @@ class DetailsScreen extends StatelessWidget {
       );
       _uploadedImageUrl = response.secureUrl;
       log("Image Uploaded: $_uploadedImageUrl");
-      // widget.imgUrl!=_uploadedImageUrl;
     } catch (e) {
       log('Cloudinary upload error: $e');
     }
   }
-
- 
+    XFile? image;
+      String? _uploadedImageUrl;
 
   @override
   Widget build(BuildContext context) {
-    // log(widget.uid);
-    // log(widget.email.text);
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Form(
@@ -140,12 +131,8 @@ class DetailsScreen extends StatelessWidget {
             ),
             Gap(30),
             CustomLongButton(
-              title: 'Continue',
+              widget: Text('Continue',style: TextStyle(fontSize: 20),),
               ontap: () {
-             
-
-
-
                 userhi = UserModel(
                   imgUrl: _uploadedImageUrl,
                   phoneNumber: phoneNumberController.text,

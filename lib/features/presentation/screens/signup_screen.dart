@@ -1,41 +1,28 @@
-
-
-
-
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/features/data/models/user_model.dart';
-import 'package:libro/features/presentation/dummmy/const.dart';
-import 'package:libro/features/presentation/screens/details_screen.dart';
-import 'package:libro/features/presentation/screens/login_screen.dart';
-import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/widgets/animation.dart';
 import 'package:libro/features/presentation/widgets/form.dart';
+import 'package:libro/features/presentation/widgets/onboarding_heading.dart';
+import 'package:libro/features/presentation/widgets/social_media_authenticators.dart';
 import 'package:libro/features/presentation/widgets/sub2.dart';
+import 'package:libro/features/presentation/widgets/switching_buttom.dart';
+import 'package:libro/features/presentation/widgets/terms_conditios.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends StatelessWidget {
+  SignupScreen({super.key});
 
-   SignupScreen({
-    super.key,
-
-  });
-
-  @override
-  State<SignupScreen> createState() => _SignupScreenState();
-}
-
-class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController emailController = TextEditingController();
 
-  final TextEditingController passwordController= TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  final TextEditingController usernameController= TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
 
-  final TextEditingController confirmPasswordController= TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   bool _isLoading = false;
 
@@ -47,10 +34,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Future<void> _createAuthUser(context) async {
     if (_formKey.currentState!.validate()) {
-      // setState(() {
-      //   _isLoading = true;
-      // });
-
       try {
         final userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
@@ -58,38 +41,30 @@ class _SignupScreenState extends State<SignupScreen> {
               password: passwordController.text.trim(),
             );
 
-        if (userCredential.user != null){
-          // if (mounted) {
-          //   // widget.uid = userCredential.user!.uid;
-          //   // log(widget.uid);
-          
-            userhi=UserModel(uid: userCredential.user!.uid,email: emailController.text,username: usernameController.text);
-              ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('success')),
+        if (userCredential.user != null) {
+          userhi = UserModel(
+            uid: userCredential.user!.uid,
+            email: emailController.text,
+            username: usernameController.text,
           );
-            nextscreen();
-            
-        //   }
-         }
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('success')));
+          nextscreen(context);
+        }
       } catch (e) {
-        // if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Authentication Error: ${e.toString()}')),
-          );
-          log(e.toString());
-        // }
-      } finally {
-        // if (mounted) {
-        //   setState(() {
-        //     _isLoading = false;
-        //   });
-        // }
-      }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Authentication Error: ${e.toString()}')),
+        );
+        log(e.toString());
+      } finally {}
     }
   }
-  void nextscreen(){
+
+  void nextscreen(context) {
     context.read<OnboardingBloc>().add(NextPageEvent());
   }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -101,8 +76,10 @@ class _SignupScreenState extends State<SignupScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Gap(30),
-            Text('Create Account!', style: AppFonts.heading1),
-            Text('we happy to see you,sign in to your account'),
+            OnboardingHeading(
+              title: 'Create Account!',
+              subTitle: 'we happy to see you,sign in to your account',
+            ),
             Expanded(child: SizedBox()),
             CustomForm(
               title: 'User name',
@@ -119,7 +96,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             CustomForm(
               title: 'Email',
-              controller:emailController,
+              controller: emailController,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please enter email';
@@ -134,7 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomForm(
               obsecure: _obscurePassword,
               title: 'Password',
-              controller:passwordController,
+              controller: passwordController,
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscurePassword ? Icons.visibility : Icons.visibility_off,
@@ -187,8 +164,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 onPressed: () {
                   _createAuthUser(context);
                   // log(widget.uid);
-                  
-
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
@@ -207,56 +182,15 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
             Gap(5),
-            Center(
-              child: Text(
-                'By signing up, you agree to our Terms & Conditions.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
-            ),
+            TermsAndConditios(),
             Expanded(child: SizedBox()),
-            Row(
-              children: [
-                Expanded(
-                  child: Divider(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    thickness: 1,
-                    endIndent: 10,
-                  ),
-                ),
-                Text('or Sign In with'),
-                Expanded(
-                  child: Divider(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    thickness: 1,
-                    indent: 10,
-                  ),
-                ),
-              ],
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 80.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(onPressed: () {}, icon: Icon(Icons.g_mobiledata)),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.apple)),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.facebook)),
-                ],
-              ),
-            ),
-           Expanded(child: SizedBox()),
-            Center(
-              child: TextButton(
-                onPressed: () {
-                 context.read<OnboardingBloc>().add(NextPageEvent());
-                },
-                child: Text(
-                  'Already have an account? Login',
-                  style: TextStyle(color: AppColors.grey),
-                ),
-              ),
+            SocialMediaAuthenticators(),
+            Expanded(child: SizedBox()),
+            SwitchingButtom(
+              onpressed: () {
+                context.read<OnboardingBloc>().add(NextPageEvent());
+              },
+              text: 'Already have an account? Login',
             ),
           ],
         ),

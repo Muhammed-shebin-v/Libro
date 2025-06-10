@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/data/models/book.dart';
 import 'package:libro/features/domain/repository/borrow.dart';
+import 'package:libro/features/presentation/screens/home_screen.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
 
@@ -289,11 +290,7 @@ class _BoookState extends State<BookBorrowedInfo> {
                               Gap(10),
                               BooksList(
                                 title: 'More Like This',
-                                books: books,
-                                images: images,
-                                authors: authors,
-                                gonores: gonores,
-                                // colors: colors,
+                                books:dummybooks
                               ),
                             ],
                           ),
