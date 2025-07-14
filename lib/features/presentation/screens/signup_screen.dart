@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/features/data/models/user_model.dart';
+import 'package:libro/features/presentation/screens/verification_screen.dart';
 import 'package:libro/features/presentation/widgets/animation.dart';
 import 'package:libro/features/presentation/widgets/form.dart';
 import 'package:libro/features/presentation/widgets/onboarding_heading.dart';
-import 'package:libro/features/presentation/widgets/social_media_authenticators.dart';
 import 'package:libro/features/presentation/widgets/sub2.dart';
 import 'package:libro/features/presentation/widgets/switching_buttom.dart';
 import 'package:libro/features/presentation/widgets/terms_conditios.dart';
@@ -24,11 +24,11 @@ class SignupScreen extends StatelessWidget {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
-  bool _obscurePassword = true;
+  final bool _obscurePassword = true;
 
-  bool _obscureConfirmPassword = true;
+  final bool _obscureConfirmPassword = true;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -47,11 +47,22 @@ class SignupScreen extends StatelessWidget {
             email: emailController.text,
             username: usernameController.text,
           );
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('success')));
-          nextscreen(context);
         }
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('success')));
+        bool? flag = await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return VerificationScreen();
+          },
+        );
+        if (flag == true) {
+         nextPage(context);
+        }
+
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Authentication Error: ${e.toString()}')),
@@ -60,8 +71,7 @@ class SignupScreen extends StatelessWidget {
       } finally {}
     }
   }
-
-  void nextscreen(context) {
+    nextPage(BuildContext context) {
     context.read<OnboardingBloc>().add(NextPageEvent());
   }
 
@@ -76,6 +86,7 @@ class SignupScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Gap(30),
+            Expanded(child: SizedBox()),
             OnboardingHeading(
               title: 'Create Account!',
               subTitle: 'we happy to see you,sign in to your account',
@@ -184,7 +195,6 @@ class SignupScreen extends StatelessWidget {
             Gap(5),
             TermsAndConditios(),
             Expanded(child: SizedBox()),
-            SocialMediaAuthenticators(),
             Expanded(child: SizedBox()),
             SwitchingButtom(
               onpressed: () {

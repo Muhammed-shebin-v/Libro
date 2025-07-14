@@ -1,100 +1,150 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/data/models/user_score.dart';
+import 'package:libro/features/presentation/bloc/leader_board/leader_board_bloc.dart';
+import 'package:libro/features/presentation/bloc/leader_board/leader_board_event.dart';
+import 'package:libro/features/presentation/bloc/leader_board/leader_board_state.dart';
+import 'package:libro/features/presentation/widgets/container.dart';
 
 class ScoreScreen extends StatelessWidget {
   const ScoreScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.color60,
-      appBar: AppBar(
+    return BlocProvider(
+      create:
+          (_) =>
+              LeaderboardBloc(FirebaseFirestore.instance)
+                ..add(FetchLeaderboard()),
+      child: Scaffold(
         backgroundColor: AppColors.color60,
-        title: const Text("Leaderboard"),
-        centerTitle: true,
+        appBar: AppBar(
+          backgroundColor: AppColors.color60,
+          title: const Text("Leaderboard"),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(top: 10,left: 20,right: 20),
+          child: BlocBuilder<LeaderboardBloc, LeaderboardState>(
+            builder: (context, state) {
+              if (state is LeaderboardLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is LeaderboardLoaded) {
+                final users = state.sortedUsers;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildTopUser(
+                          "Book Worm of ${DateFormat('MMMM').format(DateTime.now())}",
+                          users[0],
+                        ),
+                        _buildTopUser("Book Worm of All Time", users[0]),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Top Scorers",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.separated(
+                        itemCount: users.length,
+                        itemBuilder: (context, index) {
+                          return _buildUserTile(index, users[index]);
+                        },
+                        separatorBuilder: (context, index) => Gap(10),
+                      ),
+                    ),
+                  ],
+                );
+              } else if (state is LeaderboardError) {
+                return Center(child: Text("Error: ${state.message}"));
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+    );
+  }
+
+  Widget _buildTopUser(String title, UserScore user) {
+    return CustomContainer(
+      width: 150,
+      height: 200,
+      color: AppColors.color10,
+      radius: BorderRadius.circular(20),
+      shadow: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildCustomContainer("Book Worm of March", "lib/assets/calcifer.jpg", "John Doe : 1200"),
-                _buildCustomContainer("Book Worm of All Time", "lib/assets/calcifer.jpg", "calcifer : 2200"),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-
-            const Text(
-              "March Score",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(title, textAlign: TextAlign.center, style: AppFonts.heading4),
+            const SizedBox(height: 10),
+            CircleAvatar(
+              backgroundImage: NetworkImage(user.imageUrl),
+              radius: 30,
             ),
             const SizedBox(height: 10),
-
-
-            Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return _buildUserTile(index);
-                },
-              ),
+            Text(
+              user.name,
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
+            Text('${user.score}pts', style: AppFonts.body2),
           ],
         ),
       ),
     );
   }
 
-
-  Widget _buildCustomContainer(String title, String imagePath, String subtitle) {
-    return Container(
-      width: 150,
-      height: 180,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5)],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-          const SizedBox(height: 10),
-          Image.asset(imagePath, width: 60, height: 60),
-          const SizedBox(height: 10),
-          Text(subtitle, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500), textAlign: TextAlign.center),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _buildUserTile(index) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 3)],
-      ),
-      child: Row(
-        children: [
-          Text((index+1).toString(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          const SizedBox(width: 10),
-          CircleAvatar(
-            backgroundImage: AssetImage('lib/assets/calcifer.jpg'),
-            radius: 20,
-          ),
-          const SizedBox(width: 10),
-          Expanded(child: Text('alen', style: const TextStyle(fontSize: 16))),
-          Text('200', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        ],
+  Widget _buildUserTile(int index, UserScore user) {
+    return CustomContainer(
+      color: AppColors.color30,
+      radius: BorderRadius.circular(15),
+      shadow: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Text(
+              '${index + 1}.',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 10),
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(user.imageUrl),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(user.name, style: AppFonts.heading4),
+                  Text(user.email, style: AppFonts.body2),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Text('${user.score}', style: AppFonts.heading4),
+                Text('pts', style: AppFonts.body2),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

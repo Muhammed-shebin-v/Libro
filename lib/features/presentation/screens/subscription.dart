@@ -21,8 +21,11 @@ class Subscription extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Gap(5),
-              OnboardingHeading(title: 'Get Started Today!',
-                subTitle:'For borrowing books you need to purchase our membership...',),
+              OnboardingHeading(
+                title: 'Get Started Today!',
+                subTitle:
+                    'For borrowing books you need to purchase our membership...',
+              ),
               Gap(20),
               CustomContainer(
                 color: AppColors.color30,
@@ -67,36 +70,12 @@ class Subscription extends StatelessWidget {
                 style: GoogleFonts.kalnia(fontSize: 22),
               ),
               Gap(10),
-              CustomContainer(
-                height: 100,
-                width: double.infinity,
-                color: AppColors.color30,
-                radius: BorderRadius.circular(18),
-                shadow: 4,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Basic Plan',
-                            style: GoogleFonts.kalnia(fontSize: 20),
-                          ),
-                          Text('- cost : 300rs'),
-                          Text('- count of book : 3pcs'),
-                        ],
-                      ),
-                      Lottie.asset(
-                        'lib/assets/Animation - 1742030119292.json',
-                        height: 150,
-                        fit: BoxFit.fill,
-                      ),
-                    ],
-                  ),
-                ),
+
+              _priceWidget(
+                title: 'Basic Plan',
+                price: '250',
+                count: '2',
+                image: 'lib/assets/Animation - 1742030119292.json',
               ),
               Gap(10),
               CustomContainer(
@@ -118,7 +97,7 @@ class Subscription extends StatelessWidget {
                             style: GoogleFonts.kalnia(fontSize: 20),
                           ),
                           Text('- cost : 400rs'),
-                          Text('- count of book : 5pcs'),
+                          Text('- count of book : 4pcs'),
                         ],
                       ),
                       Lottie.asset(
@@ -150,7 +129,7 @@ class Subscription extends StatelessWidget {
                             style: GoogleFonts.kalnia(fontSize: 20),
                           ),
                           Text('- cost : 600rs'),
-                          Text('- count of book : 10pcs'),
+                          Text('- count of book :6pcs'),
                         ],
                       ),
                       Lottie.asset(
@@ -174,6 +153,38 @@ class Subscription extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _priceWidget({
+    required String title,
+    required String price,
+    required String count,
+    required String image,
+  }) {
+    return CustomContainer(
+      height: 100,
+      width: double.infinity,
+      color: AppColors.color30,
+      radius: BorderRadius.circular(18),
+      shadow: 4,
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: GoogleFonts.kalnia(fontSize: 20)),
+                Text('- cost : $price rs'),
+                Text('- count of book :$count ps'),
+              ],
+            ),
+            Lottie.asset(image, height: 150, fit: BoxFit.fill),
+          ],
         ),
       ),
     );

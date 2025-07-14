@@ -2,8 +2,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:libro/features/presentation/screens/login_screen.dart';
 import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/presentation/widgets/long_button.dart';
 import 'package:libro/features/presentation/widgets/sub2.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -127,8 +127,8 @@ class _IntroductionPageViewState extends State<IntroductionPageView> {
                   currentIndex == 2
                       ? Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: PrimaryButton(
-                          onTap: () {
+                        child: CustomLongButton(
+                          ontap: () {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -136,22 +136,23 @@ class _IntroductionPageViewState extends State<IntroductionPageView> {
                               ),
                             );
                           },
-                          text: 'Get Started',
+                          widget: Text('Get Started') ,
                         ),
                       )
                       : Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: PrimaryButton(
-                          onTap: () {
-                            setState(() {
-                              pageController.animateToPage(
-                                2,
-                                duration: const Duration(milliseconds: 1000),
-                                curve: Curves.fastOutSlowIn,
-                              );
-                            });
+                        child: CustomLongButton(
+                          ontap: 
+                         () {
+                             Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LibroSubscriptionScreen2(),
+                              ),
+                            );
+                           
                           },
-                          text: 'Skip',
+                          widget:Text('skip'), 
                         ),
                       ),
                   const SizedBox(height: 20),
@@ -165,31 +166,7 @@ class _IntroductionPageViewState extends State<IntroductionPageView> {
   }
 }
 
-class PrimaryButton extends StatelessWidget {
-  final String text;
-  final VoidCallback onTap;
-  const PrimaryButton({super.key, required this.text, required this.onTap});
 
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-        fixedSize: const Size(double.maxFinite, 53),
-        backgroundColor: AppColors.color10,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-      child: Text(
-        text,
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
 
 class CustomAnimatedWidget extends StatelessWidget {
   final int index;

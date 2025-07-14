@@ -13,6 +13,7 @@ class OnboardingHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [Text(title, style: AppFonts.heading1), Text(subTitle)],
     );
   }

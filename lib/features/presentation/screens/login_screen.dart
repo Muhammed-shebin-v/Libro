@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/features/presentation/bloc/login/login_bloc.dart';
+import 'package:libro/features/presentation/screens/forget_password.dart';
 import 'package:libro/features/presentation/widgets/animation.dart';
 import 'package:libro/features/presentation/widgets/bottom_navigation.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/widgets/form.dart';
 import 'package:libro/features/presentation/widgets/long_button.dart';
 import 'package:libro/features/presentation/widgets/onboarding_heading.dart';
-import 'package:libro/features/presentation/widgets/social_media_authenticators.dart';
 import 'package:libro/features/presentation/widgets/switching_buttom.dart';
 import 'package:libro/features/presentation/widgets/terms_conditios.dart';
 
@@ -28,6 +28,7 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Expanded(child: SizedBox()),
             Gap(30),
             OnboardingHeading(
               title: 'Hi Welcome Back!',
@@ -64,12 +65,16 @@ class LoginScreen extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.centerRight,
-              child: Text(
-                'forgot password?',
-                style: TextStyle(color: AppColors.grey),
+              child: TextButton(
+               onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgetPassword()));
+               },
+                child: Text( 'forgot password?',
+                style: TextStyle(color: AppColors.grey),),
               ),
             ),
             Gap(20),
+            
             BlocConsumer<LoginBloc, LoginState>(
               listener: (context, state) {
                 if (state is LoginSuccess) {
@@ -80,7 +85,7 @@ class LoginScreen extends StatelessWidget {
                 } else if (state is LoginFailure) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                  ).showSnackBar(SnackBar(content: Text(state.message),backgroundColor: AppColors.secondary,));
                 }
               },
               builder: (context, state) {
@@ -103,10 +108,9 @@ class LoginScreen extends StatelessWidget {
               },
             ),
             Gap(5),
-            TermsAndConditios(signin: true),
-            Gap(30),
-            SocialMediaAuthenticators(signin: true),
-            Gap(30),
+            
+            TermsAndConditios(),
+            Expanded(child: SizedBox()),
             SwitchingButtom(
               onpressed: () {
                 context.read<OnboardingBloc>().add(NextPageEvent());

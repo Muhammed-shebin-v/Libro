@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/data/models/book.dart';
-import 'package:libro/features/presentation/screens/qr_scanner.dart';
+import 'package:libro/features/presentation/screens/book_info.dart';
 import 'package:libro/features/presentation/widgets/book.dart';
 
 class BooksList extends StatelessWidget {
   final String title;
-final List<BookModel> books;
+  final String userId;
+  final List<BookModel> books;
   const BooksList({
     super.key,
     required this.title,
-required this.books
+    required this.books,
+    required this.userId,
   });
 
   @override
@@ -19,7 +21,15 @@ required this.books
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: AppFonts.heading3),
+        Container(
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          decoration: BoxDecoration(
+            border: Border.all(),
+            borderRadius: BorderRadius.circular(15),
+            color: AppColors.color10
+          ),
+          child: Text(title, style: AppFonts.heading4)),
         Gap(10),
         SizedBox(
           height: 220,
@@ -27,20 +37,23 @@ required this.books
             scrollDirection: Axis.horizontal,
             itemCount: books.length,
             itemBuilder: (context, index) {
-              final BookModel book=books[index];
+              final BookModel book = books[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => QrScanner()),
+                      MaterialPageRoute(
+                        builder:
+                            (context) => BookInfo(book: book, userid: userId),
+                      ),
                     );
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Book(color: Color(0xFFE8E8E8), image: book.imageUrls[0]),
+                      Book(color: book.color, image: book.imageUrls[0]),
                       Gap(5),
                       SizedBox(
                         width: 80,
@@ -49,12 +62,12 @@ required this.books
                           spacing: 5,
                           children: [
                             Text(
-                             book.bookName,
+                              book.bookName,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(fontSize: 12),
                             ),
                             Text(
-                             book.authorName,
+                              book.authorName,
                               style: AppFonts.body2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -66,7 +79,7 @@ required this.books
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(
-                               book.category,
+                                book.category,
                                 textAlign: TextAlign.center,
                                 style: AppFonts.body2,
                               ),

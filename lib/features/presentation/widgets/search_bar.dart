@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:libro/features/presentation/bloc/bloc/search_dart_bloc.dart';
-import 'package:libro/features/presentation/bloc/bloc/search_dart_event.dart';
+import 'package:libro/core/themes/fonts.dart';
+import 'package:libro/features/presentation/bloc/search/search_dart_bloc.dart';
+import 'package:libro/features/presentation/bloc/search/search_dart_event.dart';
 
 class CustomSearchBar extends StatelessWidget {
    const CustomSearchBar({super.key,});
@@ -15,7 +16,7 @@ class CustomSearchBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey,
+            color: AppColors.grey,
             spreadRadius: 0,
             blurRadius: 0,
             offset: Offset(3, 3),

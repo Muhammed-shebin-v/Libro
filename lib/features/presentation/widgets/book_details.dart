@@ -3,11 +3,14 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/data/models/book.dart';
+import 'package:libro/features/data/models/wishlist.dart';
 import 'package:libro/features/presentation/widgets/container.dart';
+import 'package:libro/features/presentation/widgets/wish_button.dart';
 
 class CustomBookDetails extends StatelessWidget {
   final BookModel book;
-  const CustomBookDetails({super.key, required this.book});
+  final String userId;
+  const CustomBookDetails({super.key, required this.book,required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +25,7 @@ class CustomBookDetails extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.95,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.share)),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.bookmark,
-                    color: const Color.fromARGB(255, 255, 136, 0),
-                    size: 35,
-                  ),
-                ),
-              ],
-            ),
+           Gap(50),
             Padding(
               padding: EdgeInsets.all(20),
               child: Column(
@@ -43,6 +33,7 @@ class CustomBookDetails extends StatelessWidget {
                 children: [
                   Text(book.bookName, style: AppFonts.body1),
                   Text(book.authorName),
+                  Gap(10),
                   CustomContainer(
                     color: AppColors.color60,
                     radius: BorderRadius.circular(25),
@@ -59,26 +50,28 @@ class CustomBookDetails extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Text(
-                                  book.currentStock > 0
-                                      ? 'available'
-                                      : 'notAvailable',
-                                ),
-
                                 Container(
                                   height: 10,
                                   width: 10,
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
+                                    color:book.currentStock>0? const Color.fromARGB(
                                       255,
                                       7,
                                       255,
                                       36,
-                                    ),
+                                    ):Colors.red,
                                     border: Border.all(),
                                     borderRadius: BorderRadius.circular(25),
                                   ),
                                 ),
+                                Gap(5),
+                                Text(
+                                  book.currentStock > 0
+                                      ? 'available'
+                                      : 'out of stock',
+                                ),
+
+                                
                               ],
                             ),
                             Text('${book.pages} • ${book.category}'),
@@ -107,9 +100,12 @@ class CustomBookDetails extends StatelessWidget {
                       children: [Icon(Icons.location_pin), Text(book.location)],
                     ),
                   ),
+           
+
                 ],
               ),
             ),
+           
           ],
         ),
       ),

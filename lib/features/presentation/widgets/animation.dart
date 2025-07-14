@@ -10,14 +10,14 @@ import 'package:libro/features/presentation/widgets/sub2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
-// BLoC Events
+
 abstract class OnboardingEvent {}
 
 class NextPageEvent extends OnboardingEvent {}
 
 class PreviousPageEvent extends OnboardingEvent {}
 
-// BLoC State
+
 class OnboardingState {
   final int currentPage;
   final PageController pageController;
@@ -32,7 +32,7 @@ class OnboardingState {
   }
 }
 
-// BLoC
+
 class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   OnboardingBloc()
     : super(OnboardingState(currentPage: 0, pageController: PageController())) {
@@ -111,6 +111,13 @@ class SubscriptionPage extends StatelessWidget {
       // }
     }
   }
+
+
+
+
+
+
+
   String subType='Silver';
 
   @override
@@ -130,7 +137,7 @@ class SubscriptionPage extends StatelessWidget {
               fontFamily: 'serif',
             ),
           ),
-          // Subtitle
+
           Text(
             'For Borrowing books you need to buy our Membership...',
             style: TextStyle(
@@ -140,7 +147,6 @@ class SubscriptionPage extends StatelessWidget {
             ),
           ),
 
-          //make all these two custom widgets
           Gap(30),
           BlocBuilder<SubscriptionCubit, String>(
             builder: (context, selectedPlan) {
@@ -270,13 +276,13 @@ class SubscriptionPage extends StatelessWidget {
 }
 
 Future<void> saveUserToPrefs({
-  required String uid,
+   String? uid,
   required String username,
-  required String imgUrl,
+   String? imgUrl,
 }) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('uid', uid);
+  await prefs.setString('uid', uid!);
   await prefs.setString('username', username);
-  await prefs.setString('imgUrl', imgUrl);
+  await prefs.setString('imgUrl', imgUrl!);
   log('User saved to prefs: $uid');
 }

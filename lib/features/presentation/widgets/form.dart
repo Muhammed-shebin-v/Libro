@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:libro/core/themes/fonts.dart';
 
-
 class CustomForm extends StatelessWidget {
   final String title;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
-   final bool obsecure;
-   const CustomForm({
+  final bool obsecure;
+  final int? maxLength;
+  const CustomForm({
     super.key,
     required this.title,
     required this.controller,
     required this.validator,
     this.obsecure = false,
-    this.suffixIcon
+    this.suffixIcon,
+    this.maxLength
   });
 
   @override
@@ -27,15 +28,19 @@ class CustomForm extends StatelessWidget {
           obscureText: obsecure,
           validator: validator,
           controller: controller,
+          maxLength: maxLength,
           decoration: InputDecoration(
             suffixIcon: suffixIcon,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: const Color.fromARGB(255, 0, 0, 0),width: 1),
+              borderSide: BorderSide(
+                color: const Color.fromARGB(255, 0, 0, 0),
+                width: 1,
+              ),
               borderRadius: BorderRadius.circular(25.0),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: AppColors.color10,
+                color: const Color.fromARGB(255, 255, 255, 255),
               ),
               borderRadius: BorderRadius.circular(25.0),
             ),
@@ -51,6 +56,7 @@ class CustomForm extends StatelessWidget {
               fontSize: 14,
             ),
             labelText: title,
+            labelStyle: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
             border: OutlineInputBorder(),
           ),
         ),

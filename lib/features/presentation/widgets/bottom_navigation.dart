@@ -19,7 +19,6 @@ class BottomNavigation extends StatelessWidget {
   final List<Widget> _pages = [
     HomeScreen(),
     SearchScreen(),
-    QrScanner(),
     Bookshelf(),
     User(),
 
@@ -56,10 +55,6 @@ class BottomNavigation extends StatelessWidget {
                   GButton(
                     icon: Icons.search,
                     text: 'search',
-                  ),
-                  GButton(
-                    icon: Icons.chat,
-                    text: 'AI Chat',
                   ),
                   GButton(
                     icon: Icons.book,

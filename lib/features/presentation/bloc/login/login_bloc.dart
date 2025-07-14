@@ -5,10 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:libro/features/auth/auth_service.dart';
-import 'package:libro/features/data/models/book.dart';
 import 'package:libro/features/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 part 'login_event.dart';
 part 'login_state.dart';
 
@@ -29,7 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       User? user = await _authService.signIn(event.email, event.password);
       if (user != null) {
         // await _authService.fetchUserData(user.uid);
-        getUserData();
+        await getUserData();
         emit(LoginSuccess(user));
       } else {
         emit(LoginFailure("Invalid credentials"));
@@ -46,35 +44,44 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginFailure('this is the error$e'));
     }
   }
-Future<void> getUserData() async {
-  final user = FirebaseAuth.instance.currentUser;
 
-  if (user != null) {
-    final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+  Future<void> getUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
 
+    if (user != null) {
+      final doc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
 
+      if (doc.exists) {
+        UserModel user = UserModel.fromDocument(
+          doc.data() as Map<String, dynamic>,
+        );
+        log(user.uid!);
+        log(user.username!);
+        await saveUserToPrefs(
+          uid: user.uid!,
+          username: user.username!,
+          imgUrl: user.imgUrl!,
+        );
 
-if (doc.exists) {
-  UserModel user = UserModel.fromDocument(doc.data() as Map<String, dynamic>);
-  log(user.uid!);
-  log(user.username!);
-  await saveUserToPrefs(uid: user.uid!, username: user.username!, imgUrl: user.imgUrl!);
-
-  // Now you can use `user.name`, `user.email`, etc.
-}
+        // Now you can use `user.name`, `user.email`, etc.
+      }
+    }
   }
-}
-Future<void> saveUserToPrefs({
-  required String uid,
-  required String username,
-  required String imgUrl,
-}) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setString('uid', uid);
-  await prefs.setString('username', username);
-  await prefs.setString('imgUrl', imgUrl);
-  log('User saved to prefs: $uid');
-  log(username);
-}
 
+  Future<void> saveUserToPrefs({
+    required String uid,
+    required String username,
+    required String imgUrl,
+  }) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('uid', uid);
+    await prefs.setString('username', username);
+    await prefs.setString('imgUrl', imgUrl);
+    log('User saved to prefs: $uid');
+    log(username);
+  }
 }

@@ -18,15 +18,7 @@ class BookModel {
   final int? fine;
   final String? status;
   final int currentStock;
-
-
-
-
-
-
-
-
-  
+  final String? borrowId;
 
   BookModel({
     required this.bookName,
@@ -38,20 +30,20 @@ class BookModel {
     required this.stocks,
     required this.location,
     required this.imageUrls,
-    required this.uid, 
+    required this.uid,
     required this.currentStock,
     required this.color,
     required this.readers,
+    this.borrowId,
     this.borrowDate,
     this.returnDate,
     this.fine,
-    this.status
+    this.status,
   });
-
 
   factory BookModel.fromMap(Map<String, dynamic> data) {
     return BookModel(
-      uid: data['uid']??'',
+      uid: data['uid'] ?? '',
       bookName: data['bookName'] ?? '',
       bookId: data['bookId'] ?? '',
       authorName: data['authorName'] ?? '',
@@ -61,9 +53,9 @@ class BookModel {
       stocks: data['stocks'] ?? 0,
       location: data['location'] ?? '',
       imageUrls: List<String>.from(data['imageUrls'] ?? []),
-      currentStock: data['currentStock']??0,
+      currentStock: data['currentStock'] ?? 0,
       color: Color(data['color']),
-       readers: data['readers']??0
+      readers: data['readers'] ?? 0,
     );
   }
 
@@ -80,4 +72,5 @@ class BookModel {
       'imageUrls': imageUrls,
     };
   }
+    bool get isAvailable => currentStock > 0;
 }

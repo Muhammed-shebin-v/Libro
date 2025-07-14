@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:libro/features/auth/auth_service.dart';
 
 class SocialMediaAuthenticators extends StatelessWidget {
   final bool signin;
-  const SocialMediaAuthenticators({super.key,this.signin=false});
+   SocialMediaAuthenticators({super.key,this.signin=false});
+  final _auth= AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +36,11 @@ class SocialMediaAuthenticators extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.g_mobiledata)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.apple)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.facebook)),
+              IconButton(onPressed: () async{
+                // _auth.loginWithGoogle();
+              }, icon: Icon(Icons.g_mobiledata)),
+              // IconButton(onPressed: () {}, icon: Icon(Icons.apple)),
+              // IconButton(onPressed: () {}, icon: Icon(Icons.facebook)),
             ],
           ),
         ),

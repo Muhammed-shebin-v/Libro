@@ -16,8 +16,15 @@ class AppFonts {
     fontSize: 20,
     fontWeight: FontWeight.w500,
   );
-
+     static  TextStyle heading4 = GoogleFonts.k2d(
+    fontSize:16,
+    fontWeight: FontWeight.bold,
+  );
+     static  TextStyle mainHeading = GoogleFonts.kalnia(
+    fontSize:30,
+  );
   static  TextStyle body1 = GoogleFonts.k2d(fontSize: 18);
+  static TextStyle body3 =GoogleFonts.k2d(fontSize: 15);
 
   static  TextStyle body2 = GoogleFonts.k2d(fontSize: 11);
 }
@@ -26,7 +33,9 @@ class AppColors{
   static const Color color30 = Color(0xFFFEDAA1);
   static const Color color10 = Color(0xFFFFC869);
   static const Color secondary = Colors.red;
-  static const Color grey=Colors.grey;
+  static const Color grey=Color.fromARGB(255, 223, 223, 223);
   static const Color black = Colors.black;
+  static const Color green =Colors.green;
+  static const Color white= Colors.white;
 }
 

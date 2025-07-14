@@ -1,16 +1,15 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:libro/features/data/models/user_model.dart';
-import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/presentation/widgets/animation.dart';
 import 'package:libro/features/presentation/widgets/form.dart';
 import 'package:libro/features/presentation/widgets/long_button.dart';
+import 'package:libro/features/presentation/widgets/onboarding_heading.dart';
 import 'package:libro/features/presentation/widgets/sub2.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -21,13 +20,13 @@ class DetailsScreen extends StatelessWidget {
   final TextEditingController placeController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+    
 
   final cloudinary = CloudinaryPublic(
     'dwzeuyi12',
     'unsigned_uploads',
     cache: false,
   );
-
 
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
@@ -52,12 +51,12 @@ class DetailsScreen extends StatelessWidget {
       log('Cloudinary upload error: $e');
     }
   }
-    XFile? image;
-      String? _uploadedImageUrl;
+
+  XFile? image;
+  String? _uploadedImageUrl;
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Form(
@@ -66,8 +65,10 @@ class DetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Gap(30),
-            Text('Tell Us More About You', style: AppFonts.heading1),
-            Text('Enter more details to know more about you'),
+            OnboardingHeading(
+              title: 'Tell Us More About You',
+              subTitle: 'Enter more details to know more about you',
+            ),
             Gap(20),
             Center(
               child: InkWell(
@@ -86,6 +87,7 @@ class DetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
+            Gap(5),
             Center(
               child: Text(
                 'upload your profile picture',
@@ -94,23 +96,14 @@ class DetailsScreen extends StatelessWidget {
             ),
             Gap(20),
             CustomForm(
-              title: 'Full Name',
-              controller: fullNameController,
-              validator: (value) {
-                if (value == null || value.isEmpty || value.length < 2) {
-                  return 'Please enter username';
-                }
-                return null;
-              },
-            ),
-            CustomForm(
               title: 'Phone Number',
               controller: phoneNumberController,
+              maxLength: 10,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please Phone number';
                 }
-                if (value.length < 9) {
+                if (value.length <= 9 || int.tryParse(value) == null) {
                   return 'please enter valid number';
                 }
                 return null;
@@ -131,7 +124,7 @@ class DetailsScreen extends StatelessWidget {
             ),
             Gap(30),
             CustomLongButton(
-              widget: Text('Continue',style: TextStyle(fontSize: 20),),
+              widget: Text('Continue', style: TextStyle(fontSize: 20)),
               ontap: () {
                 userhi = UserModel(
                   imgUrl: _uploadedImageUrl,
@@ -142,13 +135,12 @@ class DetailsScreen extends StatelessWidget {
                   email: userhi.email,
                 );
                 context.read<OnboardingBloc>().add(NextPageEvent());
-                // _saveUserDetails();
                 log('done');
               },
             ),
             Center(
               child: Text(
-                'dfdfdddfd dfdfdfdfd dfdf',
+                'Enter your valid datas',
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ),
