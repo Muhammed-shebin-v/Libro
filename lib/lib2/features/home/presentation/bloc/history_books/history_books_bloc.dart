@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:libro/features/domain/services/books_service.dart';
-import 'package:libro/features/presentation/bloc/history_books/history_books_event.dart';
-import 'package:libro/features/presentation/bloc/history_books/history_books_state.dart';
+import 'history_books_event.dart';
+import 'history_books_state.dart';
 
 class HistoryBookBloc extends Bloc<HistoryBookEvent, HistoryBookState> {
   final BooksService _bookService = BooksService();

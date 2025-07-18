@@ -7,10 +7,9 @@ import 'package:libro/features/presentation/bloc/bottom_navigation/bottom_navigt
 import 'package:libro/features/presentation/bloc/bottom_navigation/bottom_navigtion_event.dart';
 import 'package:libro/features/presentation/bloc/bottom_navigation/bottom_navigtion_state.dart';
 import 'package:libro/features/presentation/screens/book_shelf.dart';
-import 'package:libro/features/presentation/screens/home_screen.dart';
-import 'package:libro/features/presentation/screens/qr_scanner.dart';
 import 'package:libro/features/presentation/screens/search_screen.dart';
 import 'package:libro/features/presentation/screens/user.dart';
+import 'package:libro/lib2/features/home/presentation/screens/home_screen.dart';
 
 class BottomNavigation extends StatelessWidget {
 

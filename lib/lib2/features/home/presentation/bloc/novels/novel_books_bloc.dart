@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:libro/features/domain/services/books_service.dart';
-import 'package:libro/features/presentation/bloc/novels/novel_books_event.dart';
-import 'package:libro/features/presentation/bloc/novels/novel_books_state.dart';
+import 'novel_books_event.dart';
+import 'novel_books_state.dart';
 
 class NovelsBloc extends Bloc<NovelsEvent, NovelsState> {
   final BooksService _bookService = BooksService();

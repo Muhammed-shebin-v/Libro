@@ -5,17 +5,18 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:libro/core/themes/fonts.dart';
 import 'package:libro/features/data/models/user_model.dart';
-import '../../../../lib2/features/home/presentation/bloc/novels/novel_books_bloc.dart';
-import '../../../../lib2/features/home/presentation/bloc/novels/novel_books_state.dart';
-import '../../../../lib2/features/home/presentation/bloc/history_books/history_books_bloc.dart';
-import '../../../../lib2/features/home/presentation/bloc/history_books/history_books_state.dart';
-import '../../../../lib2/features/home/presentation/bloc/latest_books/books_bloc.dart';
-import '../../../../lib2/features/home/presentation/bloc/latest_books/books_state.dart';
-import 'package:libro/features/presentation/screens/score_screen.dart';
+import '../bloc/novels/novel_books_bloc.dart';
+import '../bloc/novels/novel_books_state.dart';
+import '../bloc/history_books/history_books_bloc.dart';
+import '../bloc/history_books/history_books_state.dart';
+import '../bloc/latest_books/books_bloc.dart';
+import '../bloc/latest_books/books_state.dart';
 import 'package:libro/features/presentation/widgets/books_list.dart';
 import 'package:libro/features/presentation/widgets/custom_ad.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'score_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

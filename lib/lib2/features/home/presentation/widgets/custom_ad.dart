@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../lib2/features/home/presentation/bloc/ad/ad_bloc.dart';
+import '../bloc/ad/ad_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CustomAd extends StatelessWidget {
